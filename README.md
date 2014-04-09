@@ -7,7 +7,7 @@ Provides testing for JSON APIs with Behat 3
 
 ## Documentation
 
-[Official documentation][doc/index.rst]
+[Official documentation](doc/index.rst)
 
 ## Copyright
 
