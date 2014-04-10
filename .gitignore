@@ -1,2 +1,4 @@
 composer.lock
+testapp/logs/*
+!testapp/logs/.gitkeep
 vendor

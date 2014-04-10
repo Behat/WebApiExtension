@@ -17,12 +17,14 @@
     ],
 
     "require": {
-        "php":          ">=5.3.3",
-        "behat/behat":  "~3.0-RC3@dev"
+        "php":          ">=5.4",
+        "behat/behat":  "~3.0-RC3@dev",
+        "guzzlehttp/guzzle": "4.*"
     },
 
     "require-dev": {
         "symfony/process": "~2.1",
+        "silex/silex": "~1",
         "phpunit/phpunit": "~4.0"
     },
 

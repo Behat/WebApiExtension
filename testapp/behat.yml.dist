@@ -1,0 +1,14 @@
+default:
+    formatters:
+        pretty: ~
+#        progress:
+#            paths: true
+
+    extensions:
+        Behat\WebApiExtension\Extension:
+            base_url: http://use3/index.php/
+
+    suites:
+        default:
+            path: %paths.base%/features
+            contexts: ['Behat\WebApiExtension\Context\WebApiContext']
