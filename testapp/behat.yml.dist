@@ -6,7 +6,7 @@ default:
 
     extensions:
         Behat\WebApiExtension\Extension:
-            base_url: http://use3/index.php/
+            base_url: http://localhost:8080/testapp/index.php/
 
     suites:
         default:

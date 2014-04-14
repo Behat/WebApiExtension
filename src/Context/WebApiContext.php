@@ -95,8 +95,7 @@ class WebApiContext implements WebApiAwareContext {
    * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
    */
   public function iSendARequest($method, $url) {
-    //$url = $this->prepareUrl($url);
-    echo "URL: $url\n";;
+    $url = $this->prepareUrl($url);
     $this->request = $this->client->createRequest($method, $url);
     if (!empty($this->headers)) {
       $this->request->addHeaders($this->headers);

@@ -8,7 +8,6 @@ Feature: Exercise WebApiContext data sending
     """
     name=name&pass=pass
     """
-    Then print response
     Then the response should contain "POST"
     And the response should contain json:
     """
