@@ -11,7 +11,6 @@
 namespace Behat\WebApiExtension\Context;
 
 use Behat\Behat\Context\Context;
-
 use GuzzleHttp\Client;
 
 /**
@@ -21,12 +20,13 @@ use GuzzleHttp\Client;
  *
  * @see WebApiAwareInitializer
  */
-interface WebApiAwareContext extends Context {
-  /**
-   * Sets Guzzle Client instance.
-   *
-   * @param \GuzzleHttp\Client $client
-   *   Guzzle client.
-   */
-  public function setClient(Client $client);
+interface WebApiAwareContext extends Context
+{
+    /**
+     * Sets Guzzle Client instance.
+     *
+     * @param \GuzzleHttp\Client $client
+     *                                   Guzzle client.
+     */
+    public function setClient(Client $client);
 }
