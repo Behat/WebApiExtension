@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$logger = new Logger();
 $app = new Silex\Application();
+$app['logger'] = new Logger();
 
 $app->match(
     'echo',
-      function (Application $app, Request $req) use ($logger) {
+      function (Application $app, Request $req) {
+          $logger = $app['logger'];
           $ret = array(
             'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
           );
