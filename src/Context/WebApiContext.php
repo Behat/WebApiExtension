@@ -140,7 +140,7 @@ class WebApiContext implements WebApiAwareContext
     {
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
-
+var_dump($string);
         $this->request = $this->client->createRequest(
                                       $method,
                                         $url,

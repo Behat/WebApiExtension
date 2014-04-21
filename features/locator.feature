@@ -7,5 +7,5 @@ Feature: Extension test
     When I run "behat"
     Then it should pass with:
       """
-      14 scenarios (14 passed)
+      12 scenarios (12 passed)
       """

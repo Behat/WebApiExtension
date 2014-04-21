@@ -3,11 +3,11 @@ Feature: Exercise WebApiContext data sending
   As a context developer
   I need to be able to send a request with values in a scenario
 
-  Scenario Outline:
-    When I send a <method> request to "echo" with values:
+  Scenario:
+    When I send a POST request to "echo" with values:
     | name | name |
     | pass | pass |
-    Then the response should contain "<method>"
+    Then the response should contain "POST"
     And the response should contain json:
     """
     {
@@ -15,10 +15,3 @@ Feature: Exercise WebApiContext data sending
     "pass": "pass"
     }
     """
-
-  Examples:
-    | method  |
-    | POST    |
-    | PUT     |
-    | PATCH   |
-
