@@ -25,8 +25,9 @@ interface WebApiAwareContext extends Context
     /**
      * Sets Guzzle Client instance.
      *
-     * @param \GuzzleHttp\Client $client
-     *                                   Guzzle client.
+     * @param \GuzzleHttp\Client $client Guzzle client.
+     *
+     * @return void
      */
     public function setClient(Client $client);
 }

@@ -140,7 +140,7 @@ class WebApiContext implements WebApiAwareContext
     {
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
-var_dump($string);
+
         $this->request = $this->client->createRequest(
                                       $method,
                                         $url,
@@ -158,7 +158,7 @@ var_dump($string);
      *
      * @param string       $method request method
      * @param string       $url    relative url
-     * @param PyStringNode $string request body
+     * @param PyStringNode $body   request body
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with form data:$/
      */
@@ -167,8 +167,10 @@ var_dump($string);
         $url = $this->prepareUrl($url);
         $body = $this->replacePlaceHolder(trim($body));
 
+        $fields = array();
         parse_str(implode('&', explode("\n", $body)), $fields);
         $this->request = $this->client->createRequest($method, $url);
+        /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
         foreach ($fields as $key => $value) {
             $requestBody->setField($key, $value);
@@ -280,6 +282,13 @@ var_dump($string);
         );
     }
 
+    /**
+     * Prepare URL by replacing placeholders and trimming slashes.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
     private function prepareUrl($url)
     {
         return ltrim($this->replacePlaceHolder($url), '/');

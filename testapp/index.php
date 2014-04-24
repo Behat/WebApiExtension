@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
-$app['logger'] = new Logger(1);
+$app['logger'] = new Logger();
 
 $app->match(
     'echo',
@@ -30,6 +30,7 @@ $app->match(
               }
           }
 
+          /** @var string $content */
           $content = $req->getContent(false);
           if (empty($content)) {
               $logger->report('No content');
