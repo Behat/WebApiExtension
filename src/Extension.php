@@ -26,14 +26,14 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class Extension implements ExtensionInterface
 {
-    const CLIENT_ID = 'web_api';
+    const CLIENT_ID = 'web_api.client';
 
     /**
      * {@inheritdoc}
      */
     public function getConfigKey()
     {
-        return static::CLIENT_ID;
+        return 'web_api';
     }
 
     /**
@@ -70,17 +70,17 @@ class Extension implements ExtensionInterface
     private function loadClient(ContainerBuilder $container, $config)
     {
         $definition = new Definition('GuzzleHttp\Client', array($config));
-        $container->setDefinition(static::CLIENT_ID . '.client', $definition);
+        $container->setDefinition(self::CLIENT_ID, $definition);
     }
 
     private function loadContextInitializer(ContainerBuilder $container, $config)
     {
         $definition = new Definition('Behat\WebApiExtension\Context\Initializer\WebApiAwareInitializer', array(
-          new Reference(static::CLIENT_ID . '.client'),
+          new Reference(self::CLIENT_ID),
           $config
         ));
-        $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));
-        $container->setDefinition(static::CLIENT_ID . '.' . ContextExtension::INITIALIZER_TAG, $definition);
+        $definition->addTag(ContextExtension::INITIALIZER_TAG);
+        $container->setDefinition('web_api.context_initializer', $definition);
     }
 
     /**
