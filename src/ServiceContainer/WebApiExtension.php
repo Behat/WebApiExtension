@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Behat\WebApiExtension;
+namespace Behat\WebApiExtension\ServiceContainer;
 
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
@@ -19,11 +19,11 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Symfony2 extension for Behat class.
+ * Web API extension for Behat.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class Extension implements ExtensionInterface
+class WebApiExtension implements ExtensionInterface
 {
     const CLIENT_ID = 'web_api.client';
 
