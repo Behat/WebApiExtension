@@ -10,14 +10,19 @@ matrix:
   allow_failures:
     - php: hhvm
 
+before_install:
+  # start a web server on port 8080, running in the background
+  - bin/start_server.sh
+
 before_script:
-  - composer self-update
   - composer install --prefer-source
   - export LANG=C
   - export PATH=vendor/bin:$PATH
-  # start a web server on port 8080, run in the background; wait for initialization
-  - php -S 127.0.0.1:8080 &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
 script:
   - behat -fprogress --strict
+
+after_failure:
+  - cat server.log
+  - sudo cat /var/log/nginx/error.log
+  - sudo cat /var/log/nginx/access.log
