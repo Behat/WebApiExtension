@@ -74,7 +74,7 @@ class WebApiExtension implements ExtensionInterface
 
     private function loadContextInitializer(ContainerBuilder $container, $config)
     {
-        $definition = new Definition('Behat\WebApiExtension\Context\Initializer\WebApiAwareInitializer', array(
+        $definition = new Definition('Behat\WebApiExtension\Context\Initializer\ApiClientAwareInitializer', array(
           new Reference(self::CLIENT_ID),
           $config
         ));

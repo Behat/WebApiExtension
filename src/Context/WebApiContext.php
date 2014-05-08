@@ -20,7 +20,7 @@ use PHPUnit_Framework_Assert as Assertions;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class WebApiContext implements WebApiAwareContext
+class WebApiContext implements ApiClientAwareContext
 {
     /**
      * @var string

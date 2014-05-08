@@ -12,17 +12,17 @@ namespace Behat\WebApiExtension\Context\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use Behat\WebApiExtension\Context\WebApiAwareContext;
+use Behat\WebApiExtension\Context\ApiClientAwareContext;
 use GuzzleHttp\Client;
 
 /**
  * Guzzle-aware contexts initializer.
  *
- * Sets Guzzle client instance to the WebApiAware contexts.
+ * Sets Guzzle client instance to the ApiClientAwareContext.
  *
  * @author Frédéric G. Marand <fgm@osinet.fr>
  */
-class WebApiAwareInitializer implements ContextInitializer
+class ApiClientAwareInitializer implements ContextInitializer
 {
     /**
      * @var Client
@@ -46,7 +46,7 @@ class WebApiAwareInitializer implements ContextInitializer
      */
     public function initializeContext(Context $context)
     {
-        if ($context instanceof WebApiAwareContext) {
+        if ($context instanceof ApiClientAwareContext) {
             $context->setClient($this->client);
         }
     }
