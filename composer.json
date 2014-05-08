@@ -17,10 +17,9 @@
     ],
 
     "require": {
-        "php":          ">=5.4",
-        "behat/behat":  "~3.0",
-        "guzzlehttp/guzzle": "4.*",
-        "psr/log":      "*"
+        "php": ">=5.4",
+        "behat/behat": "~3.0",
+        "guzzlehttp/guzzle": "4.*"
     },
 
     "require-dev": {
@@ -31,8 +30,7 @@
 
     "autoload": {
         "psr-4": {
-            "Behat\\WebApiExtension\\": "src/",
-            "Behat\\WebApiExtension\\TestApp\\": "testapp/"
+            "Behat\\WebApiExtension\\": "src/"
         }
     },
 
