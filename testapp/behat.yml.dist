@@ -1,0 +1,12 @@
+default:
+    formatters:
+        pretty: ~
+
+    extensions:
+        Behat\WebApiExtension\Extension:
+            base_url: http://localhost:8080/testapp/index.php/
+
+    suites:
+        default:
+            path: %paths.base%/features
+            contexts: ['Behat\WebApiExtension\Context\WebApiContext']

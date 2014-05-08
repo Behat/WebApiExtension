@@ -12,12 +12,8 @@
 namespace Behat\WebApiExtension;
 
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
-use Behat\Behat\Gherkin\ServiceContainer\GherkinExtension;
-use Behat\Testwork\EventDispatcher\ServiceContainer\EventDispatcherExtension;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
-use Behat\Testwork\Specification\ServiceContainer\SpecificationExtension;
-use Behat\Testwork\Suite\ServiceContainer\SuiteExtension;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -30,12 +26,14 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class Extension implements ExtensionInterface
 {
+    const CLIENT_ID = 'web_api';
+
     /**
      * {@inheritdoc}
      */
     public function getConfigKey()
     {
-        return 'web_api';
+        return static::CLIENT_ID;
     }
 
     /**
@@ -50,6 +48,14 @@ class Extension implements ExtensionInterface
      */
     public function configure(ArrayNodeDefinition $builder)
     {
+        $builder
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('base_url')
+                    ->defaultValue('http://localhost')
+                    ->end()
+                ->end()
+            ->end();
     }
 
     /**
@@ -57,6 +63,24 @@ class Extension implements ExtensionInterface
      */
     public function load(ContainerBuilder $container, array $config)
     {
+        $this->loadClient($container, $config);
+        $this->loadContextInitializer($container, $config);
+    }
+
+    private function loadClient(ContainerBuilder $container, $config)
+    {
+        $definition = new Definition('GuzzleHttp\Client', array($config));
+        $container->setDefinition(static::CLIENT_ID . '.client', $definition);
+    }
+
+    private function loadContextInitializer(ContainerBuilder $container, $config)
+    {
+        $definition = new Definition('Behat\WebApiExtension\Context\Initializer\WebApiAwareInitializer', array(
+          new Reference(static::CLIENT_ID . '.client'),
+          $config
+        ));
+        $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));
+        $container->setDefinition(static::CLIENT_ID . '.' . ContextExtension::INITIALIZER_TAG, $definition);
     }
 
     /**
