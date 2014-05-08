@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Behat WebApiExtension.
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Behat\WebApiExtension\Context;
 
-use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Client;
@@ -15,14 +22,13 @@ use PHPUnit_Framework_Assert as Assertions;
  */
 class WebApiContext implements WebApiAwareContext
 {
-
     /**
      * @var string
      */
     private $authorization;
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private $client;
 
@@ -41,11 +47,10 @@ class WebApiContext implements WebApiAwareContext
      */
     private $response;
 
-    private $browser;
     private $placeHolders = array();
 
     /**
-     * @param \GuzzleHttp\Client $client
+     * {@inheritdoc}
      */
     public function setClient(Client $client)
     {
@@ -142,15 +147,14 @@ class WebApiContext implements WebApiAwareContext
         $string = $this->replacePlaceHolder(trim($string));
 
         $this->request = $this->client->createRequest(
-                                      $method,
-                                        $url,
-                                        array(
-                                          'headers' => $this->getHeaders(),
-                                          'body' => $string,
-                                        )
+            $method,
+            $url,
+            array(
+                'headers' => $this->getHeaders(),
+                'body' => $string,
+            )
         );
         $this->response = $this->client->send($this->request);
-
     }
 
     /**
@@ -231,7 +235,6 @@ class WebApiContext implements WebApiAwareContext
      * @throws \RuntimeException
      *
      * @Then /^(?:the )?response should contain json:$/
-     *
      */
     public function theResponseShouldContainJson(PyStringNode $jsonString)
     {
@@ -252,16 +255,6 @@ class WebApiContext implements WebApiAwareContext
     }
 
     /**
-     * Prints beautified debug string.
-     *
-     * @param string $string debug string
-     */
-    public function printDebug($string)
-    {
-        echo "\n\033[36m|  " . strtr($string, array("\n" => "\n|  ")) . "\033[0m\n\n";
-    }
-
-    /**
      * Prints last response body.
      *
      * @Then print response
@@ -271,14 +264,12 @@ class WebApiContext implements WebApiAwareContext
         $request = $this->request;
         $response = $this->response;
 
-        $this->printDebug(
-             sprintf(
-               "%s %s => %d:\n%s",
-               $request->getMethod(),
-               $request->getUrl(),
-               $response->getStatusCode(),
-               $response->getBody()
-             )
+        echo sprintf(
+            "%s %s => %d:\n%s",
+            $request->getMethod(),
+            $request->getUrl(),
+            $response->getStatusCode(),
+            $response->getBody()
         );
     }
 
@@ -315,7 +306,7 @@ class WebApiContext implements WebApiAwareContext
      *
      * @return string
      */
-    public function replacePlaceHolder($string)
+    protected function replacePlaceHolder($string)
     {
         foreach ($this->placeHolders as $key => $val) {
             $string = str_replace($key, $val, $string);

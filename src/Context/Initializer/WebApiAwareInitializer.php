@@ -25,14 +25,14 @@ use GuzzleHttp\Client;
 class WebApiAwareInitializer implements ContextInitializer
 {
     /**
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private $client;
 
     /**
      * Initializes initializer.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param Client $client
      */
     public function __construct(Client $client)
     {
@@ -42,7 +42,7 @@ class WebApiAwareInitializer implements ContextInitializer
     /**
      * Initializes provided context.
      *
-     * @param \Behat\Behat\Context\Context $context
+     * @param Context $context
      */
     public function initializeContext(Context $context)
     {
