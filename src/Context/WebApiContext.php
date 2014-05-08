@@ -13,6 +13,7 @@ namespace Behat\WebApiExtension\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_Assert as Assertions;
 
 /**
@@ -100,7 +101,8 @@ class WebApiContext implements ApiClientAwareContext
         if (!empty($this->headers)) {
             $this->request->addHeaders($this->headers);
         }
-        $this->response = $this->client->send($this->request);
+
+        $this->sendRequest();
     }
 
     /**
@@ -129,7 +131,7 @@ class WebApiContext implements ApiClientAwareContext
             $this->request->addHeaders($this->headers);
         }
 
-        $this->response = $this->client->send($this->request);
+        $this->sendRequest();
     }
 
     /**
@@ -154,7 +156,7 @@ class WebApiContext implements ApiClientAwareContext
                 'body' => $string,
             )
         );
-        $this->response = $this->client->send($this->request);
+        $this->sendRequest();
     }
 
     /**
@@ -180,7 +182,7 @@ class WebApiContext implements ApiClientAwareContext
             $requestBody->setField($key, $value);
         }
 
-        $this->response = $this->client->send($this->request);
+        $this->sendRequest();
     }
 
     /**
@@ -345,6 +347,19 @@ class WebApiContext implements ApiClientAwareContext
         foreach ($this->headers as $headerIndex => $headerValue) {
             if (strpos($headerValue, $headerName) === 0) {
                 unset($this->headers[$headerIndex]);
+            }
+        }
+    }
+
+    private function sendRequest()
+    {
+        try {
+            $this->response = $this->client->send($this->request);
+        } catch (RequestException $e) {
+            $this->response = $e->getResponse();
+
+            if (null === $this->response) {
+                throw $e;
             }
         }
     }

@@ -8,5 +8,5 @@ Feature: Test app verification
     When I run "behat"
     Then it should pass with:
       """
-      12 scenarios (12 passed)
+      13 scenarios (13 passed)
       """
