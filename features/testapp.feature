@@ -1,4 +1,5 @@
-Feature: Extension test
+@testapp
+Feature: Test app verification
   In order to test the extension easily
   As a WebApi feature tester
   I want to be able to find features automatically

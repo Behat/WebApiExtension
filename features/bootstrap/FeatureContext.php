@@ -1,6 +1,7 @@
 <?php
 
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Hook\Scope\ScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -18,13 +19,31 @@ class FeatureContext implements SnippetAcceptingContext
      * @var Process
      */
     private $process;
+    /**
+     * @var string
+     */
+    private $workingDir;
+    private $useTestApp = false;
+
+    /**
+     * Cleans test folders in the temporary directory.
+     *
+     * @BeforeSuite
+     * @AfterSuite
+     */
+    public static function cleanTestFolders()
+    {
+        if (is_dir($dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api')) {
+            self::clearDirectory($dir);
+        }
+    }
 
     /**
      * Prepares test folders in the temporary directory.
      *
      * @BeforeScenario
      */
-    public function prepareProcess()
+    public function prepareScenario(ScenarioScope $event)
     {
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
@@ -32,6 +51,36 @@ class FeatureContext implements SnippetAcceptingContext
         }
         $this->phpBin = $php;
         $this->process = new Process(null);
+
+        if ($event->getScenario()->hasTag('testapp') || $event->getFeature()->hasTag('testapp')) {
+            $this->workingDir = __DIR__ . '/../../testapp';
+            $this->useTestApp = true;
+        } else {
+            $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
+                md5(microtime() * rand(0, 10000));
+
+            mkdir($dir . '/features/bootstrap', 0777, true);
+            $this->workingDir = $dir;
+            $this->useTestApp = false;
+        }
+    }
+
+    /**
+     * Creates a file with specified name and context in current working dir.
+     *
+     * @Given /^(?:there is )?a file named "([^"]*)" with:$/
+     *
+     * @param string       $filename name of the file (relative path)
+     * @param PyStringNode $content  PyString string instance
+     */
+    public function aFileNamedWith($filename, PyStringNode $content)
+    {
+        if ($this->useTestApp) {
+            throw new InvalidArgumentException('Creating files in the working directory is not allowed when using the test app');
+        }
+
+        $content = strtr((string) $content, array("'''" => '"""'));
+        $this->createFile($this->workingDir . '/' . $filename, $content);
     }
 
     /**
@@ -45,14 +94,14 @@ class FeatureContext implements SnippetAcceptingContext
     {
         $argumentsString = strtr($argumentsString, array('\'' => '"'));
 
-        $this->process->setWorkingDirectory(__DIR__ . '/../../testapp');
+        $this->process->setWorkingDirectory($this->workingDir);
         $this->process->setCommandLine(
             sprintf(
                 '%s %s %s %s',
                 $this->phpBin,
                 escapeshellarg(BEHAT_BIN_PATH),
                 $argumentsString,
-                strtr('--format-settings=\'{"timer": false}\'', array('\'' => '"', '"' => '\"'))
+                strtr('--format-settings=\'{"timer": false}\' --no-colors', array('\'' => '"', '"' => '\"'))
             )
         );
         $this->process->start();
@@ -150,5 +199,33 @@ class FeatureContext implements SnippetAcceptingContext
         }
 
         return trim(preg_replace("/ +$/m", '', $output));
+    }
+
+    private function createFile($filename, $content)
+    {
+        $path = dirname($filename);
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        file_put_contents($filename, $content);
+    }
+
+    private static function clearDirectory($path)
+    {
+        $files = scandir($path);
+        array_shift($files);
+        array_shift($files);
+
+        foreach ($files as $file) {
+            $file = $path . DIRECTORY_SEPARATOR . $file;
+            if (is_dir($file)) {
+                self::clearDirectory($file);
+            } else {
+                unlink($file);
+            }
+        }
+
+        rmdir($path);
     }
 }
