@@ -1,7 +1,6 @@
 <?php
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Behat\Hook\Scope\ScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -23,7 +22,6 @@ class FeatureContext implements SnippetAcceptingContext
      * @var string
      */
     private $workingDir;
-    private $useTestApp = false;
 
     /**
      * Cleans test folders in the temporary directory.
@@ -43,26 +41,20 @@ class FeatureContext implements SnippetAcceptingContext
      *
      * @BeforeScenario
      */
-    public function prepareScenario(ScenarioScope $event)
+    public function prepareScenario()
     {
+        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
+            md5(microtime() * rand(0, 10000));
+
+        mkdir($dir . '/features/bootstrap', 0777, true);
+
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
             throw new \RuntimeException('Unable to find the PHP executable.');
         }
+        $this->workingDir = $dir;
         $this->phpBin = $php;
         $this->process = new Process(null);
-
-        if ($event->getScenario()->hasTag('testapp') || $event->getFeature()->hasTag('testapp')) {
-            $this->workingDir = __DIR__ . '/../../testapp';
-            $this->useTestApp = true;
-        } else {
-            $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
-                md5(microtime() * rand(0, 10000));
-
-            mkdir($dir . '/features/bootstrap', 0777, true);
-            $this->workingDir = $dir;
-            $this->useTestApp = false;
-        }
     }
 
     /**
@@ -75,10 +67,6 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function aFileNamedWith($filename, PyStringNode $content)
     {
-        if ($this->useTestApp) {
-            throw new InvalidArgumentException('Creating files in the working directory is not allowed when using the test app');
-        }
-
         $content = strtr((string) $content, array("'''" => '"""'));
         $this->createFile($this->workingDir . '/' . $filename, $content);
     }
