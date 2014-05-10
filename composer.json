@@ -19,13 +19,13 @@
     "require": {
         "php": ">=5.4",
         "behat/behat": "~3.0",
-        "guzzlehttp/guzzle": "4.*"
+        "guzzlehttp/guzzle": "4.*",
+        "phpunit/phpunit": "~4.0"
     },
 
     "require-dev": {
         "symfony/process": "~2.1",
-        "silex/silex": "~1",
-        "phpunit/phpunit": "~4.0"
+        "silex/silex": "~1"
     },
 
     "autoload": {
