@@ -353,10 +353,8 @@ class WebApiContext implements ApiClientAwareContext
      */
     protected function removeHeader($headerName)
     {
-        foreach ($this->headers as $headerIndex => $headerValue) {
-            if (strpos($headerValue, $headerName) === 0) {
-                unset($this->headers[$headerIndex]);
-            }
+        if (array_key_exists($headerName, $this->headers)) {
+            unset($this->headers[$headerName]);
         }
     }
 
