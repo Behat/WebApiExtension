@@ -70,7 +70,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $this->removeHeader('Authorization');
         $this->authorization = base64_encode($username . ':' . $password);
-        $this->addHeader('Authorization: Basic ' . $this->authorization);
+        $this->addHeader('Authorization', 'Basic ' . $this->authorization);
     }
 
     /**
@@ -83,7 +83,7 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function iSetHeaderWithValue($name, $value)
     {
-        $this->addHeader($name . ':' . $value);
+        $this->addHeader($name, $value);
     }
 
     /**
@@ -330,11 +330,20 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * Adds header
      *
-     * @param string $header
+     * @param string $name
+     * @param string $value
      */
-    protected function addHeader($header)
+    protected function addHeader($name, $value)
     {
-        $this->headers[] = $header;
+        if (isset($this->headers[$name])) {
+            if (!is_array($this->headers[$name])) {
+                $this->headers[$name] = array($this->headers[$name]);
+            }
+
+            $this->headers[$name][] = $value;
+        } else {
+            $this->headers[$name] = $value;
+        }
     }
 
     /**
