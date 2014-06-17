@@ -14,6 +14,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Subscriber\History;
 use PHPUnit_Framework_Assert as Assertions;
 
 /**
@@ -39,9 +40,19 @@ class WebApiContext implements ApiClientAwareContext
     private $headers = array();
 
     /**
+     * @var array
+     */
+    private $requestOptions = array();
+
+    /**
      * @var \GuzzleHttp\Message\RequestInterface
      */
     private $request;
+
+    /**
+     * @var History
+     */
+    private $requestHistory;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface
@@ -97,10 +108,7 @@ class WebApiContext implements ApiClientAwareContext
     public function iSendARequest($method, $url)
     {
         $url = $this->prepareUrl($url);
-        $this->request = $this->client->createRequest($method, $url);
-        if (!empty($this->headers)) {
-            $this->request->addHeaders($this->headers);
-        }
+        $this->createRequest($method, $url);
 
         $this->sendRequest();
     }
@@ -126,10 +134,25 @@ class WebApiContext implements ApiClientAwareContext
         $bodyOption = array(
           'body' => json_encode($fields),
         );
-        $this->request = $this->client->createRequest($method, $url, $bodyOption);
-        if (!empty($this->headers)) {
-            $this->request->addHeaders($this->headers);
+        $this->createRequest($method, $url, $bodyOption);
+
+        $this->sendRequest();
+    }
+
+    /**
+     * @When (I) send a :method request to :url with query parameters:
+     */
+    public function iSendARequestWithQueryParameters($method, $url, TableNode $parameters)
+    {
+        $url = $this->prepareUrl($url);
+        $fields = array();
+
+        foreach ($parameters->getRowsHash() as $key => $val) {
+            $fields[$key] = $this->replacePlaceHolder($val);
         }
+
+        $this->createRequest($method, $url);
+        $this->request->setQuery($fields);
 
         $this->sendRequest();
     }
@@ -148,7 +171,7 @@ class WebApiContext implements ApiClientAwareContext
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
 
-        $this->request = $this->client->createRequest(
+        $this->createRequest(
             $method,
             $url,
             array(
@@ -175,7 +198,7 @@ class WebApiContext implements ApiClientAwareContext
 
         $fields = array();
         parse_str(implode('&', explode("\n", $body)), $fields);
-        $this->request = $this->client->createRequest($method, $url);
+        $this->createRequest($method, $url);
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
         foreach ($fields as $key => $value) {
@@ -197,6 +220,56 @@ class WebApiContext implements ApiClientAwareContext
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
         Assertions::assertSame($expected, $actual);
+    }
+
+    /**
+     * @Then (the) response header :header should be equal to :value
+     */
+    public function theResponseHeaderShouldBeEqualTo($header, $value)
+    {
+        Assertions::assertSame($this->response->getHeader($header), $value);
+    }
+
+    /**
+     * @Then (the) response header :header should not be equal to :value
+     */
+    public function theResponseHeaderShouldNotBeEqualTo($header, $value)
+    {
+        Assertions::assertNotSame($this->response->getHeader($header), $value);
+    }
+
+    /**
+     * @Then (the) response header :header should contain :value
+     */
+    public function theResponseHeaderShouldContain($header, $value)
+    {
+        Assertions::assertContains($value, $this->response->getHeader($header));
+    }
+
+    /**
+     * @Then (the) response header :header should not contain :value
+     */
+    public function theResponseHeaderShouldNotContain($header, $value)
+    {
+        Assertions::assertNotContains($value, $this->response->getHeader($header));
+    }
+
+    /**
+     * @Then (the) response should be equal to:
+     */
+    public function theResponseShouldBeEqualTo(PyStringNode $text)
+    {
+        $actual = (string) $this->response->getBody();
+        Assertions::assertSame($text->getRaw(), $actual);
+    }
+
+    /**
+     * @Then (the) response should not be equal to:
+     */
+    public function theResponseShouldNotBeEqualTo(PyStringNode $text)
+    {
+        $actual = (string) $this->response->getBody();
+        Assertions::assertNotSame($text->getRaw(), $actual);
     }
 
     /**
@@ -254,6 +327,37 @@ class WebApiContext implements ApiClientAwareContext
             Assertions::assertArrayHasKey($key, $actual);
             Assertions::assertEquals($etalon[$key], $actual[$key]);
         }
+    }
+
+    /**
+     * @Given (I) do not follow redirects
+     */
+    public function iDoNotFollowRedirects()
+    {
+        $this->requestOptions['allow_redirects'] = false;
+    }
+
+    /**
+     * @Then (I) should be redirected
+     */
+    public function iShouldBeRedirected()
+    {
+        $firstResponse = $this->getHistoryFirstResponse();
+        $status = $firstResponse->getStatusCode();
+        $isFirstResponseRedirect = $status >= 300 && $status < 400;
+        Assertions::assertTrue($isFirstResponseRedirect, sprintf('Response of status %d is not a redirect', $status));
+        Assertions::assertArrayHasKey('Location', $firstResponse->getHeaders());
+    }
+
+    /**
+     * @Then (I) should be redirected to :to
+     */
+    public function iShouldBeRedirectedTo($to)
+    {
+        $this->iShouldBeRedirected();
+
+        $firstResponse = $this->getHistoryFirstResponse();
+        Assertions::assertSame($to, $firstResponse->getHeader('Location'));
     }
 
     /**
@@ -369,5 +473,34 @@ class WebApiContext implements ApiClientAwareContext
                 throw $e;
             }
         }
+    }
+
+    private function createRequest($method, $url, $options = array())
+    {
+        if (!empty($this->requestOptions)) {
+            $options = array_merge($this->requestOptions, $options);
+            $this->requestOptions = array();
+        }
+
+        $this->request = $this->client->createRequest($method, $url, $options);
+        $this->request->getEmitter()->attach($this->requestHistory = new History());
+
+        if (!empty($this->headers)) {
+            $this->request->addHeaders($this->headers);
+        }
+    }
+
+    private function getHistoryFirstResponse()
+    {
+        $historyIterator = $this->requestHistory->getIterator();
+        $historyIterator->rewind();
+        $firstTransaction = $historyIterator->current();
+        $firstResponse = isset($firstTransaction['response']) ? $firstTransaction['response'] : null;
+
+        if (null === $firstResponse) {
+            throw new \RuntimeException('No response found in the last request transaction log.');
+        }
+
+        return $firstResponse;
     }
 }

@@ -204,6 +204,58 @@ Feature: Test app verification
       1 scenario (1 passed)
       """
 
+  Scenario: Asserting on the headers
+    Given a file named "features/assert_headers.feature" with:
+      """
+      Feature: Exercise WebApiContext Assert Header
+        In order to validate the assert_header step
+        As a context developer
+        I need to be able to assert on the content of response headers
+
+      Scenario:
+        When I send a GET request to "echo"
+        Then the response header "Content-Type" should be equal to "application/json"
+        Then the response header "Content-Type" should contain "json"
+        Then the response header "Content-Type" should not contain "magic"
+        Then the response header "Content-Type" should not be equal to "application"
+      """
+    When I run "behat features/assert_headers.feature"
+    Then it should pass with:
+      """
+      .....
+
+      1 scenario (1 passed)
+      """
+
+  Scenario: Asserting on the body
+    Given a file named "features/assert_body.feature" with:
+      """
+      Feature: Exercise WebApiContext Assert Body
+        In order to validate the assert body steps
+        As a context developer
+        I need to be able to assert on the content of the body
+
+      Scenario:
+        When I send a GET request to "hello/Adrien"
+        Then the response should contain "Adrien"
+        And the response should not contain "foobar"
+        And the response should be equal to:
+          '''
+          Hello Adrien
+          '''
+        And the response should not be equal to:
+          '''
+          Hello
+          '''
+      """
+    When I run "behat features/assert_body.feature"
+    Then it should pass with:
+      """
+      .....
+
+      1 scenario (1 passed)
+      """
+
   Scenario: Authentication
     Given a file named "features/authentication.feature" with:
       """
@@ -226,4 +278,35 @@ Feature: Test app verification
       .....
 
       1 scenario (1 passed)
+      """
+
+  Scenario: Redirects
+    Given a file named "features/redirects.feature" with:
+      """
+      Feature: Exercise WebApiContext Redirects checking
+        In order to validate the redirect steps
+        As a context developer
+        I need to be able to detect and assert on redirects
+
+      Scenario:
+        When I send a GET request to "redirect" with query parameters:
+          | url | /hello/christophe |
+        Then I should be redirected
+        Then I should be redirected to "/hello/christophe"
+
+      Scenario:
+        Given I do not follow redirects
+        When I send a GET request to "redirect" with query parameters:
+          | url | /hello/christophe |
+        Then the response code should be 302
+        And the response header "Location" should be equal to "/hello/christophe"
+        And I should be redirected
+        Then I should be redirected to "/hello/christophe"
+      """
+    When I run "behat features/redirects.feature"
+    Then it should pass with:
+      """
+      .........
+
+      2 scenarios (2 passed)
       """
