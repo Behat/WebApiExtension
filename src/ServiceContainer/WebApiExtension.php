@@ -52,9 +52,12 @@ class WebApiExtension implements ExtensionInterface
             ->children()
                 ->scalarNode('base_url')
                     ->defaultValue('http://localhost')
-                    ->end()
                 ->end()
-            ->end();
+                ->arrayNode('defaults')
+                    ->prototype('variable')->end()
+                ->end()
+            ->end()
+        ;
     }
 
     /**

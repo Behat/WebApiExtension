@@ -479,7 +479,6 @@ class WebApiContext implements ApiClientAwareContext
     {
         if (!empty($this->requestOptions)) {
             $options = array_merge($this->requestOptions, $options);
-            $this->requestOptions = array();
         }
 
         $this->request = $this->client->createRequest($method, $url, $options);
