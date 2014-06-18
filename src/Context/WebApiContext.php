@@ -191,13 +191,30 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with form data:$/
      */
-    public function iSendARequestWithFormData($method, $url, PyStringNode $body)
+    public function iSendARequestWithFormData($method, $url, $body)
     {
         $url = $this->prepareUrl($url);
-        $body = $this->replacePlaceHolder(trim($body));
+
+        if ($body instanceof TableNode) {
+            $table = $body;
+            $body = array();
+            foreach ($table->getRows() as $row) {
+                $body[] = sprintf(
+                    '%s=%s',
+                    $this->replacePlaceHolder($row[0]),
+                    urlencode($this->replacePlaceHolder($row[1]))
+                );
+            }
+            $body = join('&', $body);
+        } else {
+            $body = $this->replacePlaceHolder((string) $body);
+        }
+
+        $body = trim($body);
 
         $fields = array();
         parse_str(implode('&', explode("\n", $body)), $fields);
+
         $this->createRequest($method, $url);
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
