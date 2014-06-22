@@ -256,7 +256,40 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    /**
+	/**
+	 * Checks that response body contains JSON subset from PyString.
+	 *
+	 * @param PyStringNode $jsonString
+	 *
+	 * @Then /^(?:the )?response should contain (?:the )?json subset:$/
+	 */
+	public function theResponseShouldContainJsonSubset(PyStringNode $jsonString)
+	{
+		$etalon = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
+		$actual = $this->response->json();
+
+		if (null === $etalon) {
+			throw new \RuntimeException(
+				"Can not convert etalon to json:\n".$this->replacePlaceHolder($jsonString->getRaw())
+			);
+		}
+		$this->assertArrayContainsRecursive($etalon, $actual);
+	}
+
+	private function assertArrayContainsRecursive($expect, $actual)
+	{
+		foreach ($expect as $key => $val) {
+			Assertions::assertArrayHasKey($key, $actual);
+			$actualVal = $actual[$key];
+			if (is_array($actualVal)) {
+				$this->assertArrayContainsRecursive($expect[$key], $actualVal);
+			} else {
+				Assertions::assertEquals($expect[$key], $actualVal);
+			}
+		}
+	}
+
+	/**
      * Prints last response body.
      *
      * @Then print response
