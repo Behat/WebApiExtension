@@ -256,7 +256,34 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    /**
+	/**
+	 * Checks that response Header contains specific text.
+	 *
+	 * @param string $header
+	 * @param string $type
+	 *
+	 * @Then the response header :header should contain :type
+	 */
+	public function theResponseHeaderShouldContain($header, $type)
+	{
+		Assertions::assertRegExp('/'.preg_quote($type).'/', $this->response->getHeader($header));
+	}
+
+	/**
+	 * Checks that response Header does not contains specific text.
+	 *
+	 * @param string $header
+	 * @param string $type
+	 *
+	 * @Then the response header :header should not contain :type
+	 */
+	public function theResponseHeaderShouldNotContain($header, $type)
+	{
+		Assertions::assertNotRegExp('/'.preg_quote($type).'/', $this->response->getHeader($header));
+	}
+
+
+	/**
      * Prints last response body.
      *
      * @Then print response
