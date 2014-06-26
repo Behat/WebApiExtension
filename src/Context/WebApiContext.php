@@ -266,9 +266,11 @@ class WebApiContext implements ApiClientAwareContext
         $request = $this->request;
         $response = $this->response;
 
-	    if ($request == null || $response == null) return;
+        if ($request == null || $response == null) {
+            return;
+        }
 
-	    echo sprintf(
+        echo sprintf(
             "%s %s => %d:\n%s",
             $request->getMethod(),
             $request->getUrl(),
