@@ -257,6 +257,22 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Prints last requests header & body, useful for debugging api handshakes
+     *
+     * @Then print request
+     */
+    public function printRequest()
+    {
+        $request = $this->request;
+        if ($request == null) return;
+
+        foreach ($request->getHeaders() as $name => $values) {
+            echo $name . ": " . implode(", ", $values) . "\n";
+        }
+        echo "\n" . $request->getBody();
+    }
+
+    /**
      * Prints last response body.
      *
      * @Then print response
