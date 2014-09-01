@@ -64,6 +64,10 @@ class WebApiExtension implements ExtensionInterface
     {
         $this->loadClient($container, $config);
         $this->loadContextInitializer($container, $config);
+
+        if (class_exists('Sanpi\Behatch\Context\JsonContext')) {
+            $this->loadHttpCallVoter($container);
+        }
     }
 
     private function loadClient(ContainerBuilder $container, $config)
@@ -80,6 +84,13 @@ class WebApiExtension implements ExtensionInterface
         ));
         $definition->addTag(ContextExtension::INITIALIZER_TAG);
         $container->setDefinition('web_api.context_initializer', $definition);
+    }
+
+    private function loadHttpCallVoter(ContainerBuilder $container)
+    {
+        $definition = new Definition('Behat\WebApiExtension\Context\WebApiContextVoter');
+        $definition->addTag('behatch.context_voter');
+        $container->setDefinition('web_api.http_call.context_voter', $definition);
     }
 
     /**

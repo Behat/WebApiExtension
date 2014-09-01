@@ -103,6 +103,8 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $this->sendRequest();
+
+        return $this->response;
     }
 
     /**
@@ -132,6 +134,8 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $this->sendRequest();
+
+        return $this->response;
     }
 
     /**
@@ -157,6 +161,8 @@ class WebApiContext implements ApiClientAwareContext
             )
         );
         $this->sendRequest();
+
+        return $this->response;
     }
 
     /**
@@ -183,6 +189,8 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $this->sendRequest();
+
+        return $this->response;
     }
 
     /**
