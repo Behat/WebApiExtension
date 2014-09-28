@@ -11,7 +11,7 @@
 namespace Behat\WebApiExtension\Context;
 
 use Behat\Behat\Context\Context;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Guzzle Client-aware interface for contexts.
@@ -29,5 +29,5 @@ interface ApiClientAwareContext extends Context
      *
      * @return void
      */
-    public function setClient(Client $client);
+    public function setClient(ClientInterface $client);
 }

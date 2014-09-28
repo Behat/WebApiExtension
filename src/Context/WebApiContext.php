@@ -12,7 +12,7 @@ namespace Behat\WebApiExtension\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_Assert as Assertions;
 
@@ -29,7 +29,7 @@ class WebApiContext implements ApiClientAwareContext
     private $authorization;
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
     private $client;
 
@@ -53,7 +53,7 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * {@inheritdoc}
      */
-    public function setClient(Client $client)
+    public function setClient(ClientInterface $client)
     {
         $this->client = $client;
     }
