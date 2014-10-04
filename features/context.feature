@@ -9,13 +9,13 @@ Feature: client aware context
       <?php
 
       use Behat\WebApiExtension\Context\ApiClientAwareContext;
-      use GuzzleHttp\Client;
+      use GuzzleHttp\ClientInterface;
 
       class FeatureContext implements ApiClientAwareContext
       {
           private $client;
 
-          public function setClient(Client $client)
+          public function setClient(ClientInterface $client)
           {
               $this->client = $client;
           }
