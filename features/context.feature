@@ -26,6 +26,13 @@ Feature: client aware context
           public function theClientShouldBeSet() {
               PHPUnit_Framework_Assert::assertInstanceOf('GuzzleHttp\Client', $this->client);
           }
+
+          /**
+           * @Then the client default option :option should be equal to true
+           */
+          public function theClientDefaultOptionShouldBeEqualToTrue($option) {
+              PHPUnit_Framework_Assert::assertSame(true, $this->client->getDefaultOption($option));
+          }
       }
       """
 
@@ -34,7 +41,9 @@ Feature: client aware context
       """
       default:
         extensions:
-          Behat\WebApiExtension: ~
+          Behat\WebApiExtension:
+            defaults:
+              debug: true
       """
     And a file named "features/client.feature" with:
       """
@@ -45,12 +54,13 @@ Feature: client aware context
 
         Scenario: client is set
           Then the client should be set
+          And the client default option "debug" should be equal to true
       """
-  When I run "behat -f progress features/client.feature"
-  Then it should pass with:
-    """
-    .
+    When I run "behat -f progress features/client.feature"
+    Then it should pass with:
+      """
+      ..
 
-    1 scenario (1 passed)
-    1 step (1 passed)
-    """
+      1 scenario (1 passed)
+      2 steps (2 passed)
+      """

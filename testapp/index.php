@@ -2,6 +2,7 @@
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -48,6 +49,18 @@ $app->match(
         $response = new JsonResponse($ret);
 
         return $response;
+    }
+);
+$app->match(
+    'hello/{name}',
+    function ($name) {
+        return 'Hello ' . $name;
+    }
+);
+$app->match(
+    'redirect',
+    function (Request $req) {
+        return new RedirectResponse($req->get('url', '/hello/adrien'));
     }
 );
 
