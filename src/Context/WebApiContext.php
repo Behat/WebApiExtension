@@ -228,6 +228,27 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * @Then the response should have a header :arg1 with value :arg2
+     */
+    public function theResponseShouldHaveAHeaderWithValue($name, $value)
+    {
+        $headers = $this->response->getHeaders();
+        if (!$this->response->hasHeader($name)) {
+            throw new \Exception(sprintf(
+                'Expected header : "%s", found nothing',
+                $name
+            ));
+        }
+        if (($actualHeader = $this->response->getHeader($name)) != $value) {
+            throw new \Exception(sprintf(
+                'Expected header : "%s" Actual header : "%s"',
+                $value,
+                $actualHeader
+            ));
+        }
+    }
+
+    /**
      * Checks that response body contains JSON from PyString.
      *
      * Do not check that the response body /only/ contains the JSON from PyString,
