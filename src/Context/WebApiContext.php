@@ -97,7 +97,7 @@ class WebApiContext implements ApiClientAwareContext
     public function iSendARequest($method, $url)
     {
         $url = $this->prepareUrl($url);
-        $this->request = $this->client->createRequest($method, $url);
+        $this->request = $this->getClient()->createRequest($method, $url);
         if (!empty($this->headers)) {
             $this->request->addHeaders($this->headers);
         }
@@ -126,7 +126,7 @@ class WebApiContext implements ApiClientAwareContext
         $bodyOption = array(
           'body' => json_encode($fields),
         );
-        $this->request = $this->client->createRequest($method, $url, $bodyOption);
+        $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
             $this->request->addHeaders($this->headers);
         }
@@ -148,7 +148,7 @@ class WebApiContext implements ApiClientAwareContext
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
 
-        $this->request = $this->client->createRequest(
+        $this->request = $this->getClient()->createRequest(
             $method,
             $url,
             array(
@@ -175,7 +175,7 @@ class WebApiContext implements ApiClientAwareContext
 
         $fields = array();
         parse_str(implode('&', explode("\n", $body)), $fields);
-        $this->request = $this->client->createRequest($method, $url);
+        $this->request = $this->getClient()->createRequest($method, $url);
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
         foreach ($fields as $key => $value) {
@@ -361,7 +361,7 @@ class WebApiContext implements ApiClientAwareContext
     private function sendRequest()
     {
         try {
-            $this->response = $this->client->send($this->request);
+            $this->response = $this->getClient()->send($this->request);
         } catch (RequestException $e) {
             $this->response = $e->getResponse();
 
@@ -369,5 +369,14 @@ class WebApiContext implements ApiClientAwareContext
                 throw $e;
             }
         }
+    }
+
+    private function getClient()
+    {
+        if (null === $this->client) {
+            throw new \RuntimeException('Client has not been set in WebApiContext');
+        }
+
+        return $this->client;
     }
 }
