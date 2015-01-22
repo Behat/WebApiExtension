@@ -265,13 +265,23 @@ class WebApiContext implements ApiClientAwareContext
     {
         $request = $this->request;
         $response = $this->response;
+        $contentType = $response->getHeader('Content-Type');
+        $body = $response->getBody();
+
+        switch($contentType) {
+            case 'application/json':
+                $formattedJson = json_encode(json_decode($body), JSON_PRETTY_PRINT);
+                if ($formattedJson) {
+                    $body = $formattedJson;
+                }
+        }
 
         echo sprintf(
             "%s %s => %d:\n%s",
             $request->getMethod(),
             $request->getUrl(),
             $response->getStatusCode(),
-            $response->getBody()
+            $body
         );
     }
 
