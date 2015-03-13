@@ -1,4 +1,4 @@
-Web APi Extension
+Web API Extension
 =================
 
 Installation
