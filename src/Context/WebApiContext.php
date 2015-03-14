@@ -48,6 +48,11 @@ class WebApiContext implements ApiClientAwareContext
      */
     private $response;
 
+    /**
+     * The decoded response object.
+     */
+    private $responsePayload;
+
     private $placeHolders = array();
 
     /**
@@ -378,5 +383,62 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         return $this->client;
+    }
+
+    /*
+     * Checks the response exists and returns it.
+     *
+     * @return Guzzle\Http\Message\Response
+     */
+    protected function getResponse()
+    {
+        if (! $this->response) {
+            throw new Exception("You must first make a request to check a response.");
+        }
+        return $this->response;
+    }
+
+
+     /**
+     * Return the response payload from the current response.
+     *
+     * @return  mixed
+     */
+    protected function getResponsePayload()
+    {
+        if (! $this->responsePayload) {
+            $json = json_decode($this->getResponse()->getBody(true));
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $message = 'Failed to decode JSON body ';
+
+                switch (json_last_error()) {
+                    case JSON_ERROR_DEPTH:
+                        $message .= '(Maximum stack depth exceeded).';
+                        break;
+                    case JSON_ERROR_STATE_MISMATCH:
+                        $message .= '(Underflow or the modes mismatch).';
+                        break;
+                    case JSON_ERROR_CTRL_CHAR:
+                        $message .= '(Unexpected control character found).';
+                        break;
+                    case JSON_ERROR_SYNTAX:
+                        $message .= '(Syntax error, malformed JSON).';
+                        break;
+                    case JSON_ERROR_UTF8:
+                        $message .= '(Malformed UTF-8 characters, possibly incorrectly encoded).';
+                        break;
+                    default:
+                        $message .= '(Unknown error).';
+                        break;
+                }
+
+                throw new Exception($message);
+            }
+
+            $this->responsePayload = $json;
+        }
+
+        return $this->responsePayload;
     }
 }
