@@ -20,6 +20,7 @@ use PHPUnit_Framework_Assert as Assertions;
  * Provides web API description definitions.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ * @author Tomaz Ahlin <tomaz.ahlin2@gmail.com> (Improvements only)
  */
 class WebApiContext implements ApiClientAwareContext
 {
@@ -52,11 +53,6 @@ class WebApiContext implements ApiClientAwareContext
      * @var array
      */
     protected $placeHolders = array();
-
-    /**
-     * @var array
-     */
-    protected $decodedData = array();
 
     /**
      * {@inheritdoc}
@@ -132,7 +128,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -242,11 +238,8 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldBeJson()
     {
-        $data = json_decode($this->response->getBody());
-
+        $data = json_decode($this->response->getBody(), true);
         Assertions::assertNotFalse($data);
-
-        $this->decodedData = $data;
     }
 
     /**
@@ -255,16 +248,19 @@ class WebApiContext implements ApiClientAwareContext
      * @param string $key
      * @param string $subKeys
      *
-     * @Then /^(?:the )?response should contain "([^"]*)" with "([^"]*)" $/
+     * @Then /^(?:the )?response should contain "([^"]*)" with "([^"]*)"$/
      */
     public function theResponseShouldContainKey($key, $subKeys)
     {
+        $data = json_decode($this->response->getBody(), true);
+        Assertions::assertNotFalse($data);
+
         $subKeys = explode(',', $subKeys);
 
-        Assertions::assertContains($key, $this->decodedData);
+        Assertions::assertArrayHasKey('data', $data);
 
         foreach ($subKeys as $subKey) {
-            Assertions::assertContains($subKey, $this->decodedData[$key]);
+            Assertions::assertArrayHasKey($subKey, $data[$key]);
         }
     }
 
@@ -286,7 +282,7 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
