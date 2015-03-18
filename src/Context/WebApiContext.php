@@ -26,29 +26,37 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * @var string
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var \GuzzleHttp\Message\RequestInterface
      */
-    private $request;
+    protected $request;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface
      */
-    private $response;
+    protected $response;
 
-    private $placeHolders = array();
+    /**
+     * @var array
+     */
+    protected $placeHolders = array();
+
+    /**
+     * @var array
+     */
+    protected $decodedData = array();
 
     /**
      * {@inheritdoc}
@@ -225,6 +233,39 @@ class WebApiContext implements ApiClientAwareContext
         $expectedRegexp = '/' . preg_quote($text) . '/';
         $actual = (string) $this->response->getBody();
         Assertions::assertNotRegExp($expectedRegexp, $actual);
+    }
+
+    /**
+     * Checks that response is json and stores the data to array.
+     *
+     * @Then /^(?:the )?response should be json$/
+     */
+    public function theResponseShouldBeJson()
+    {
+        $data = json_decode($this->response->getBody());
+
+        Assertions::assertNotFalse($data);
+
+        $this->decodedData = $data;
+    }
+
+    /**
+     * Checks that response is json and stores the data to array.
+     *
+     * @param string $key
+     * @param string $subKeys
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with "([^"]*)" $/
+     */
+    public function theResponseShouldContainKey($key, $subKeys)
+    {
+        $subKeys = explode(',', $subKeys);
+
+        Assertions::assertContains($key, $this->decodedData);
+
+        foreach ($subKeys as $subKey) {
+            Assertions::assertContains($subKey, $this->decodedData[$key]);
+        }
     }
 
     /**
