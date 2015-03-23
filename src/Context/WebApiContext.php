@@ -185,7 +185,10 @@ class WebApiContext implements ApiClientAwareContext
             $fields[$line[0]] = $line[1];
         }
 
-        $this->request = $this->getClient()->createRequest($method, $url, array('headers' => $this->getHeaders()));
+        $this->request = $this->getClient()->createRequest($method, $url);
+        if (!empty($this->headers)) {
+            $this->request->addHeaders($this->headers);
+        }
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
         foreach ($fields as $key => $value) {
@@ -249,25 +252,131 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response is json and it contains desired keys.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $subKeys
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with "(at least|exactly)" "([^"]*)"$/
+     */
+    public function theResponseShouldContainKeys($key, $type, $subKeys)
+    {
+        $this->theResponseShouldContainOneItem($key, $type, $subKeys, false);
+    }
+
+    /**
+     * Checks that response is json and it contains desired keys and values.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $subKeys
+     * @param string $subKeyValues
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with "(at least|exactly)" "([^"]*)" with values "([^"]*)"$/
+     */
+    public function theResponseShouldContainKeysAndValues($key, $type, $subKeys, $subKeyValues)
+    {
+        $this->theResponseShouldContainOneItem($key, $type, $subKeys, true, $subKeyValues);
+    }
+
+    /**
      * Checks that response is json and stores the data to array.
      *
      * @param string $key
+     * @param string $type
      * @param string $subKeys
-     *
-     * @Then /^(?:the )?response should contain "([^"]*)" with "([^"]*)"$/
+     * @param boolean $compareValues
+     * @param string $subKeyValues
      */
-    public function theResponseShouldContainKey($key, $subKeys)
+    private function theResponseShouldContainOneItem($key, $type, $subKeys, $compareValues, $subKeyValues = '')
     {
         $data = json_decode($this->response->getBody(), true);
         Assertions::assertNotFalse($data);
 
-        $subKeys = explode(',', $subKeys);
+        $subKeys = array_map('trim', explode(',', $subKeys));
+        $subKeyValues  = array_map('trim', explode(',', $subKeyValues));
+
+        if ($compareValues) {
+            Assertions::assertEquals(count($subKeyValues), count($subKeys));
+        }
 
         Assertions::assertArrayHasKey('data', $data);
 
-        foreach ($subKeys as $subKey) {
+        for ($j=0, $c=count($subKeys); $j<$c; $j++) {
+            $subKey = $subKeys[$j];
+            if ($this->isExactType($type)) {
+                Assertions::assertEquals(count($subKeys), count($data[$key]));
+            }
             Assertions::assertArrayHasKey($subKey, $data[$key]);
+            if ($compareValues) {
+                Assertions::assertEquals($subKeyValues[$j], $data[$key][$subKey]);
+            }
         }
+    }
+
+    /**
+     * Checks that response is json and contains the expected number of items with the desired keys.
+     *
+     * @param string $key
+     * @param integer $n
+     * @param string $type
+     * @param string $subKeys
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with (\d+) items containing "(at least|exactly)" "([^"]*)"$/
+     */
+    public function theResponseShouldContainItemsWithKeys($key, $n, $type, $subKeys)
+    {
+        $this->theResponseShouldContainItems($key, $n, $type, $subKeys, false);
+    }
+
+    /**
+     * Checks that response is json and contains the expected number of items with the desired keys.
+     *
+     * @param string $key
+     * @param integer $n
+     * @param string $type
+     * @param string $subKeys
+     * @param boolean $compareValues
+     * @param string $subKeyValues
+     */
+    private function theResponseShouldContainItems($key, $n, $type, $subKeys, $compareValues, $subKeyValues = '')
+    {
+        $data = json_decode($this->response->getBody(), true);
+        Assertions::assertNotFalse($data);
+
+        $subKeys = array_map('trim', explode(',', $subKeys));
+        $subKeyValues  = array_map('trim', explode(',', $subKeyValues));
+
+        if ($compareValues) {
+            Assertions::assertEquals(count($subKeyValues), count($subKeys));
+        }
+
+        Assertions::assertArrayHasKey($key, $data);
+        Assertions::assertEquals($n, count($data[$key]));
+
+        for ($i=0; $i<$n; $i++) {
+            for ($j=0, $c=count($subKeys); $j<$c; $j++) {
+                $subKey = $subKeys[$j];
+                Assertions::assertArrayHasKey($i, $data[$key]);
+                if ($this->isExactType($type)) {
+                    Assertions::assertEquals(count($subKeys), count($data[$key][$i]));
+                }
+                Assertions::assertArrayHasKey($subKey, $data[$key][$i]);
+                if ($compareValues) {
+                    Assertions::assertEquals($subKeyValues[$j], $data[$key][$i][$subKey]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $type
+     * @returns boolean
+     */
+    private function isExactType($type)
+    {
+        return $type === 'exactly';
     }
 
     /**
