@@ -1,0 +1,9 @@
+{
+    "id": "web-api-extension",
+    "type": "SSL",
+    "name": "web-api-extension.dev",
+    "aliases": [
+        "web-api-extension.dev"
+    ],
+    "docroot": "/vagrant/web"
+}

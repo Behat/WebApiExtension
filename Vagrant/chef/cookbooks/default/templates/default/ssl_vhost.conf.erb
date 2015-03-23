@@ -1,0 +1,38 @@
+<VirtualHost *:80>
+  ServerName <%= @name %>
+  <% if @aliases %>
+  ServerAlias <% @aliases.each do |a| %><%= a %> <% end %>
+  <% end %>
+  RewriteEngine On
+  RewriteRule ^(.*) https://<%= @name %>$1 [R=301,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName <%= @name %>
+  <% if @aliases %>
+  ServerAlias <% @aliases.each do |a| %><%= a %> <% end %>
+  <% end %>
+  DocumentRoot <%= @docroot %>
+  <Directory "<%= @docroot %>">
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
+
+  # SSL settings
+  SSLEngine on
+  SSLCertificateFile      /etc/ssl/certs/<%= @name %>.crt.pem
+  SSLCertificateKeyFile   /etc/ssl/private/<%= @name %>.key.pem
+  BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+  # MSIE 7 and newer should be able to use keepalive
+  BrowserMatch "MSIE [7-9]" ssl-unclean-shutdown
+
+  LogLevel info
+  ErrorLog /var/log/apache2/<%= @name %>-error.log
+  CustomLog /var/log/apache2/<%= @name %>-access.log combined
+</VirtualHost>

@@ -178,7 +178,13 @@ class WebApiContext implements ApiClientAwareContext
         $body = $this->replacePlaceHolder(trim($body));
 
         $fields = array();
-        parse_str(implode('&', explode("\n", $body)), $fields);
+
+        $dataLines = explode("\n", $body);
+        foreach($dataLines as $line) {
+            $line = explode('=', $line);
+            $fields[$line[0]] = $line[1];
+        }
+
         $this->request = $this->getClient()->createRequest($method, $url, array('headers' => $this->getHeaders()));
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();

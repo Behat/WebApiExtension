@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+  ServerName <%= @name %>
+  <% if @aliases %>
+  ServerAlias <% @aliases.each do |a| %><%= a %> <% end %>
+  <% end %>
+  DocumentRoot <%= @docroot %>
+  <Directory "<%= @docroot %>">
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
+  LogLevel info
+  ErrorLog /var/log/apache2/<%= @name %>-error.log
+  CustomLog /var/log/apache2/<%= @name %>-access.log combined
+</VirtualHost>

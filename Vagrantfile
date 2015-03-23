@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "sites"
+  config.vm.box_url = "file:///Volumes/Jarlssen/98\ Development/41\ Vagrant\ Boxes/sites.jarlssen.de/sites-cheflatest-virtualbox.box"
+  config.vm.hostname = "web-api-ext-dev"
+  config.vm.synced_folder ".", "/vagrant", :nfs => true
+  config.vm.network :private_network, ip: "10.2.254.4"
+  config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "Vagrant/chef/cookbooks"
+      chef.data_bags_path = "Vagrant/chef/data_bags/dev"
+      # chef debug level, start vagrant like this to debug:
+      # $ CHEF_LOG_LEVEL=debug vagrant <provision or up>
+      chef.log_level = ENV['CHEF_LOG'] || "info"
+      # chef recipes
+      chef.add_recipe("default")
+      chef.add_recipe("dev")
+    end
+  end
