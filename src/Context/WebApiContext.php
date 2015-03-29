@@ -433,7 +433,7 @@ class WebApiContext implements ApiClientAwareContext
                         break;
                 }
 
-                throw new Exception($message);
+                throw new \Exception($message);
             }
 
             $this->responsePayload = $json;
