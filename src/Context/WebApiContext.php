@@ -398,6 +398,13 @@ class WebApiContext implements ApiClientAwareContext
         return $this->response;
     }
 
+    /**
+     * @Then the ":arg1" header is set
+     */
+    public function theHeaderIsSet($headerName)
+    {
+        Assertions::assertTrue(array_key_exists($headerName, $this->response->getHeaders()));
+    }
 
      /**
      * Return the response payload from the current response.
