@@ -1,5 +1,5 @@
 {
-    "name": "behat/web-api-extension",
+    "name": "czarnolecki/web-api-extension",
     "type": "behat-extension",
     "description": "Web API extension for Behat",
     "keywords": [
@@ -14,8 +14,12 @@
             "email": "stof@notk.org"
         },
         {
+            "name": "Łukasz Czarnołęcki",
+            "email": "lukasz@czarnolecki.pl"
+        },
+        {
             "name": "Community contributors",
-            "homepage": "https://github.com/Behat/WebApiExtension/graphs/contributors"
+            "homepage": "https://github.com/Czarnolecki/WebApiExtension/graphs/contributors"
         }
     ],
     "require": {
