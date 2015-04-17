@@ -21,7 +21,7 @@ use PHPUnit_Framework_Assert as Assertions;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class WebApiContext implements ApiClientAwareContext
+class WebApiContext extends RouterContext implements ApiClientAwareContext
 {
     /**
      * @var string
