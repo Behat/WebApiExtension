@@ -20,6 +20,7 @@ use PHPUnit_Framework_Assert as Assertions;
  * Provides web API description definitions.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ * @author Łukasz Czarnołęcki <lukasz@czarnolecki.pl>
  */
 class WebApiContext extends RouterContext implements ApiClientAwareContext
 {

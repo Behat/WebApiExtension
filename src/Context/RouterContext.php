@@ -6,6 +6,11 @@ use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Context allows using Symfony2 Router
+ *
+ * @author Łukasz Czarnołęcki <lukasz@czarnolecki.pl
+ */
 class RouterContext implements KernelAwareContext
 {
     /**
