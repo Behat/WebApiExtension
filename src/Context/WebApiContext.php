@@ -114,11 +114,11 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
     /**
      * Checks that the response field is the same as passed.
      *
-     * @Then the response field ([[\w]*[\d]*]+) should be equal:
+     * @Then /^the response field ([\w]+) should be equal:$/
      */
     public function theResponseFieldShouldBeEqual($field, TableNode $table)
     {
-        $expected = $table->getRowsHash();
+        $expected = $table->getHash();
         $response = $this->response->json();
 
         Assertions::assertArrayHasKey($field, $response);
