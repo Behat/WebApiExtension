@@ -47,13 +47,30 @@ class RouterContext implements KernelAwareContext
     }
 
     /**
+     * Generates a url from a given route
+     *
      * @param string $route
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      */
-    protected function getRoute($route, $params = [])
+    protected function getUrl($route, $params = [])
     {
         return $this->getRouter()->generate($route, $params, RouterInterface::ABSOLUTE_URL);
+    }
+
+    /**
+     * Generates a url from a given patch
+     *
+     * @param $path
+     * @return string
+     */
+    protected function getUrlFromPath($path)
+    {
+        $info = $this->getRouter()->match($path);
+        $route = $info['_route'];
+        unset($info['_route']);
+
+        return $this->getUrl($route, $info);
     }
 }

@@ -65,17 +65,38 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
     }
 
     /**
-     * Sends HTTP request to specific relative URL.
+     * Sends HTTP request to specific route.
      *
      * @param string $method
      * @param string $route
      * @param TableNode $table
      *
-     * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
+     * @When /^(?:I )?send a (GET|POST) request to "([^"]+)"$/
      */
     public function iSendARequest($method, $route, TableNode $table = null)
     {
-        $url = $this->getRoute($route);
+        $url = $this->getUrl($route);
+        $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
+        if (null !== $table) {
+            $body = $request->getBody();
+            /** @var $body PostBody */
+            $body->replaceFields($table->getRowsHash());
+        }
+        $this->send($request);
+    }
+
+    /**
+     * Sends HTTP request to specific path.
+     *
+     * @param string $method
+     * @param string $path
+     * @param TableNode $table
+     *
+     * @When /^(?:I )?send a (GET|PUT|DELETE) request to path "([^"]+)"$/
+     */
+    public function iSendARequestToPath($method, $path, TableNode $table = null)
+    {
+        $url = $this->getUrlFromPath($path);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
             $body = $request->getBody();
