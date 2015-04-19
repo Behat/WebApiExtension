@@ -17,6 +17,7 @@ use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use PHPUnit_Framework_Assert as Assertions;
 use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides web API description definitions.
@@ -78,10 +79,26 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url = $this->getUrl($route);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $body = $request->getBody();
-            /** @var $body PostBody */
-            $body->replaceFields($table->getRowsHash());
+            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
         }
+        $this->send($request);
+    }
+
+    /**
+     * Sends HTTP POST request to specific route with body wrapped by field.
+     *
+     * @param string $route
+     * @param string $field
+     * @param TableNode $table
+     *
+     * @When /^(?:I )?send a POST request to "([^"]+)" with field (\w+)$/
+     */
+    public function iSendAPostRequestWithField($route, $field, TableNode $table)
+    {
+        $url = $this->getUrl($route);
+        $request = $this->client->createRequest(Request::METHOD_POST, $url,
+            ['headers' => $this->getHeadersBag()->all()]);
+        $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
         $this->send($request);
     }
 
@@ -99,10 +116,27 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url = $this->getUrlFromPath($path);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $body = $request->getBody();
-            /** @var $body PostBody */
-            $body->replaceFields($table->getRowsHash());
+            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
         }
+        $this->send($request);
+    }
+
+    /**
+     * Sends HTTP request to specific path with body wrapped by field.
+     *
+     * @param string $method
+     * @param string $path
+     * @param string $field
+     * @param TableNode $table
+     *
+     * @When /^(?:I )?send a (PUT|PATH) request to path "([^"]+)" with field (\w+)$/
+     */
+    public function iSendAPutOrPathRequestWithField($method, $path, $field, TableNode $table)
+    {
+        $url = $this->getUrlFromPath($path);
+        $request = $this->client->createRequest($method, $url,
+            ['headers' => $this->getHeadersBag()->all()]);
+        $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
         $this->send($request);
     }
 
@@ -114,6 +148,28 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
     public function theResponseCodeShouldBe($code)
     {
         Assertions::assertSame(intval($this->response->getStatusCode()), intval($code));
+    }
+
+    /**
+     * Checks that the response has specific header with value
+     *
+     * @Then /^the response header ([\w\|\-]+) should be "([^"]+)"$/
+     */
+    public function theResponseHeaderShouldBe($header, $value)
+    {
+        Assertions::assertTrue($this->response->hasHeader($header));
+        Assertions::assertEquals($value, $this->response->getHeader($header));
+    }
+
+    /**
+     * Checks that the response has header location contains path
+     *
+     * @Then /^the response header location should contains "([^"]+)"$/
+     */
+    public function theResponseHeaderLocationShouldContainsPath($path)
+    {
+        Assertions::assertTrue($this->response->hasHeader('location'));
+        Assertions::assertContains($path, $this->response->getHeader('location'));
     }
 
     /**
