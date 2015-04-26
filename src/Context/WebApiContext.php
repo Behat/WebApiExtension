@@ -79,9 +79,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url     = $this->getUrl($route);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields($table->getRowsHash());
-            $request->setBody($body);
+            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
         }
         $this->send($request);
     }
@@ -95,14 +93,14 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
      *
      * @When /^(?:I )?send a POST request to "([^"]+)" with field (\w+)$/
      */
-    public function iSendAPostRequestWithField($route, $field, TableNode $table)
+    public function iSendAPostRequestWithField($route, $field, TableNode $table = null)
     {
         $url     = $this->getUrl($route);
         $request = $this->client->createRequest(Request::METHOD_POST, $url,
             ['headers' => $this->getHeadersBag()->all()]);
-        $body    = new PostBody();
-        $body->replaceFields([$field => $table->getRowsHash()]);
-        $request->setBody($body);
+        if (null !== $table) {
+            $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
+        }
         $this->send($request);
     }
 
@@ -120,9 +118,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url     = $this->getUrlFromPath($path);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields($table->getRowsHash());
-            $request->setBody($body);;
+            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
         }
         $this->send($request);
     }
@@ -135,16 +131,16 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
      * @param string $field
      * @param TableNode $table
      *
-     * @When /^(?:I )?send a (PUT|PATH) request to path "([^"]+)" with field (\w+)$/
+     * @When /^(?:I )?send a (PUT|PATH|POST) request to path "([^"]+)" with field (\w+)$/
      */
-    public function iSendAPutOrPathRequestWithField($method, $path, $field, TableNode $table)
+    public function iSendARequestWithField($method, $path, $field, TableNode $table = null)
     {
         $url     = $this->getUrlFromPath($path);
         $request = $this->client->createRequest($method, $url,
             ['headers' => $this->getHeadersBag()->all()]);
-        $body    = new PostBody();
-        $body->replaceFields([$field => $table->getRowsHash()]);
-        $request->setBody($body);
+        if (null !== $table) {
+            $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
+        }
         $this->send($request);
     }
 
