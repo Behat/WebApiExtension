@@ -79,7 +79,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url     = $this->getUrl($route);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
+            $body = (new PostBody())->replaceFields($table->getRowsHash());
+            $request->setBody($body);
         }
         $this->send($request);
     }
@@ -99,7 +100,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $request = $this->client->createRequest(Request::METHOD_POST, $url,
             ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
+            $body = (new PostBody())->replaceFields([$field => $table->getRowsHash()]);
+            $request->setBody($body);
         }
         $this->send($request);
     }
@@ -118,7 +120,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $url     = $this->getUrlFromPath($path);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $request->setBody((new PostBody())->replaceFields($table->getRowsHash()));
+            $body = (new PostBody())->replaceFields($table->getRowsHash());
+            $request->setBody($body);
         }
         $this->send($request);
     }
@@ -139,7 +142,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContext
         $request = $this->client->createRequest($method, $url,
             ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
-            $request->setBody((new PostBody())->replaceFields([$field => $table->getRowsHash()]));
+            $body = (new PostBody())->replaceFields([$field => $table->getRowsHash()]);
+            $request->setBody($body);
         }
         $this->send($request);
     }
