@@ -20,7 +20,7 @@ use GuzzleHttp\ClientInterface;
  *
  * @see WebApiAwareInitializer
  */
-interface ApiClientAwareContext extends Context
+interface ApiClientAwareContextInterface extends Context
 {
     /**
      * Sets Guzzle Client instance.
