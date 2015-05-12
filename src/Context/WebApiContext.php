@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  * @author Łukasz Czarnołęcki <lukasz@czarnolecki.pl>
  */
-class WebApiContextInterface extends RouterContext implements ApiClientAwareContextInterface
+class WebApiContext extends RouterContext implements ApiClientAwareContextInterface
 {
     /**
      * @var ClientInterface
