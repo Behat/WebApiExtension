@@ -11,6 +11,7 @@ before_install:
   - bin/start_server.sh
 
 before_script:
+  - composer self-update
   - composer install --prefer-source
   - export LANG=C
   - export PATH=vendor/bin:$PATH
