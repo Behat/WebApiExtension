@@ -1,5 +1,5 @@
 {
-    "name": "linioit/behat-web-api-extension",
+    "name": "linio/behat-web-api-extension",
     "type": "behat-extension",
     "description": "Fork of behat/web-api-extension with a few changes for Linio needs",
     "keywords": ["behat", "api", "test"],
