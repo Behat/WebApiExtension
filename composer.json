@@ -1,10 +1,9 @@
 {
     "name": "behat/web-api-extension",
     "type": "behat-extension",
-    "description": "Web API extension for Behat",
-    "keywords": ["api", "test"],
-    "homepage": "http://extensions.behat.org",
-    "license": "MIT",
+    "description": "Fork of behat/web-api-extension with a few changes for Linio needs",
+    "keywords": ["behat", "api", "test"],
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Christophe Coevoet",
@@ -15,25 +14,21 @@
             "homepage": "https://github.com/Behat/WebApiExtension/graphs/contributors"
         }
     ],
-
     "require": {
         "php": ">=5.4",
         "behat/behat": "~3.0",
         "guzzlehttp/guzzle": "4 - 5",
         "phpunit/phpunit": "~4.0"
     },
-
     "require-dev": {
         "symfony/process": "~2.1",
         "silex/silex": "~1"
     },
-
     "autoload": {
         "psr-4": {
             "Behat\\WebApiExtension\\": "src/"
         }
     },
-
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
