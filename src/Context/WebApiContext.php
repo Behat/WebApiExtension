@@ -9,6 +9,7 @@
  */
 namespace Behat\WebApiExtension\Context;
 
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -218,6 +219,17 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
             Assertions::assertArrayHasKey($key, $fieldValues);
             Assertions::assertEquals($value, $fieldValues[$key]);
         }
+    }
+
+    /**
+     * @Then /^the response should be equal json:$/
+     */
+    public function theResponseShouldBeEqualJson(PyStringNode $jsonString)
+    {
+        $actual   = $this->response->json();
+        $expected = json_decode($jsonString, true);
+
+        Assertions::assertEquals($expected, $actual);
     }
 
     /**
