@@ -67,10 +67,17 @@ class RouterContext implements KernelAwareContext
      */
     protected function getUrlFromPath($path)
     {
-        $info = $this->getRouter()->match($path);
-        $route = $info['_route'];
+        $urlStack = parse_url($path);
+        $info     = $this->getRouter()->match($urlStack['path']);
+        $route    = $info['_route'];
         unset($info['_route']);
 
-        return $this->getUrl($route, $info);
+        $url = $this->getUrl($route, $info);
+
+        if (isset($urlStack['query'])) {
+            $url .= '?' . $urlStack['query'];
+        }
+
+        return $url;
     }
 }
