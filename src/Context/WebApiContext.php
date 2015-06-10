@@ -26,32 +26,32 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * @var string
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var \GuzzleHttp\Message\RequestInterface
      */
-    private $request;
+    protected $request;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface
      */
-    private $response;
+    protected $response;
 
     /**
      * @var array
      */
-    private $placeHolders = array();
+    protected $placeHolders = array();
 
     /**
      * {@inheritdoc}
@@ -285,7 +285,7 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @return string
      */
-    private function prepareUrl($url)
+    protected function prepareUrl($url)
     {
         return ltrim($this->replacePlaceHolder($url), '/');
     }
@@ -361,7 +361,7 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    private function sendRequest()
+    protected function sendRequest()
     {
         try {
             $this->response = $this->getClient()->send($this->request);
@@ -374,7 +374,10 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    private function getClient()
+    /**
+     * @return ClientInterface
+     */
+    protected function getClient()
     {
         if (null === $this->client) {
             throw new \RuntimeException('Client has not been set in WebApiContext');
