@@ -1,7 +1,9 @@
 # WebApiExtension
 
-[![Build Status](https://travis-ci.org/Behat/WebApiExtension.svg?branch=master)](https://travis-ci.org/Behat/WebApiExtension)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Behat/WebApiExtension/badges/quality-score.png?s=6499e6132229ddab00c3777daf1c74a9f31bee7c)](https://scrutinizer-ci.com/g/Behat/WebApiExtension/)
+[![Latest Stable Version](https://poser.pugx.org/linio/behat-web-api-extension/v/stable.svg)](https://packagist.org/packages/linio/behat-web-api-extension) 
+[![License](https://poser.pugx.org/linio/behat-web-api-extension/license.svg)](https://packagist.org/packages/linio/behat-web-api-extension) 
+[![Build Status](https://secure.travis-ci.org/LinioIT/behat-web-api-extension.png)](http://travis-ci.org/LinioIT/behat-web-api-extension) 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/LinioIT/behat-web-api-extension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/LinioIT/behat-web-api-extension/?branch=master)
 
 Provides testing for JSON APIs with Behat 3
 
