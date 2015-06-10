@@ -48,6 +48,9 @@ class WebApiContext implements ApiClientAwareContext
      */
     private $response;
 
+    /**
+     * @var array
+     */
     private $placeHolders = array();
 
     /**
@@ -245,7 +248,7 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
