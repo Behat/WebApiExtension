@@ -233,6 +233,16 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     }
 
     /**
+     * @Then /^the response should contains "([\w]+)"$/
+     */
+    public function theResponseShouldContain($text)
+    {
+        $actual   = $this->response->json();
+
+        Assertions::assertContains($text, $actual);
+    }
+
+    /**
      * @return HeaderBag
      */
     protected function getHeadersBag()
