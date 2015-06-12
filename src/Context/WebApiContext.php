@@ -264,7 +264,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      *
      * @param RequestInterface $request
      */
-    private function send(RequestInterface $request)
+    protected function send(RequestInterface $request)
     {
         try {
             $this->response = $this->client->send($request);
