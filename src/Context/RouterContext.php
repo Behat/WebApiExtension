@@ -16,7 +16,7 @@ class RouterContext implements KernelAwareContext
     /**
      * @var KernelInterface
      */
-    private $kernel;
+    protected $kernel;
 
     /**
      * @var RouterInterface
