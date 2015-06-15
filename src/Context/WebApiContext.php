@@ -44,6 +44,11 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     protected $headers;
 
     /**
+     * @var string
+     */
+    protected $responseContent;
+
+    /**
      * {@inheritdoc}
      */
     public function setClient(ClientInterface $client)
@@ -268,8 +273,10 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     {
         try {
             $this->response = $this->client->send($request);
+            $this->responseContent = $this->response->getBody()->getContents();
         } catch (ClientException $e) {
             $this->response = $e->getResponse();
+            $this->responseContent = $this->response->getBody()->getContents();
             if (null === $this->response) {
                 throw $e;
             }
