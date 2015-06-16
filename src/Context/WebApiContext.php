@@ -29,6 +29,11 @@ use Symfony\Component\HttpFoundation\Request;
 class WebApiContext extends RouterContext implements ApiClientAwareContextInterface
 {
     /**
+     * @var string
+     */
+    protected $jsonResponse;
+
+    /**
      * @var ClientInterface
      */
     protected $client;
@@ -198,7 +203,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function theResponseShouldBeEqual(TableNode $table)
     {
         $expected = $table->getRowsHash();
-        $response = $this->response->json();
+        $response = $this->jsonResponse;
         Assertions::assertCount(count($expected), $response);
         foreach ($expected as $key => $value) {
             Assertions::assertArrayHasKey($key, $response);
@@ -214,7 +219,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function theResponseFieldShouldBeEqual($field, TableNode $table)
     {
         $expected = $table->getHash();
-        $response = $this->response->json();
+        $response = $this->jsonResponse;
 
         Assertions::assertArrayHasKey($field, $response);
         $fieldValues = $response[$field];
@@ -231,7 +236,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function theResponseShouldBeEqualJson(PyStringNode $jsonString)
     {
-        $actual   = $this->response->json();
+        $actual   = $this->jsonResponse;
         $expected = json_decode($jsonString, true);
 
         Assertions::assertEquals($expected, $actual);
@@ -242,7 +247,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function theResponseShouldContain($text)
     {
-        $actual   = $this->response->json();
+        $actual   = $this->jsonResponse;
 
         Assertions::assertContains($text, $actual);
     }
@@ -273,10 +278,11 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     {
         try {
             $this->response = $this->client->send($request);
-            $this->responseContent = $this->response->getBody()->getContents();
+            $this->jsonResponse = $this->response->json();
         } catch (ClientException $e) {
             $this->response = $e->getResponse();
-            $this->responseContent = $this->response->getBody()->getContents();
+            //when 404 or 401 or 403 or something else
+            $this->jsonResponse = $this->response->getBody()->getContents();
             if (null === $this->response) {
                 throw $e;
             }
