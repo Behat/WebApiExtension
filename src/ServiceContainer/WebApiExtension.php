@@ -50,7 +50,7 @@ class WebApiExtension implements ExtensionInterface
         $builder
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('base_url')
+                ->scalarNode('base_uri')
                     ->defaultValue('http://localhost')
                     ->end()
                 ->end()
