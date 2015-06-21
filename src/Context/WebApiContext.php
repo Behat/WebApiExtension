@@ -15,6 +15,8 @@ use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_Assert as Assertions;
+use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides web API description definitions.
@@ -39,14 +41,14 @@ class WebApiContext implements ApiClientAwareContext
     protected $headers = array();
 
     /**
-     * @var \GuzzleHttp\Message\RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var \GuzzleHttp\Message\ResponseInterface
+     * @var ResponseInterface
      */
     protected $response;
+
+    /**
+     * @var Request
+     */
+    protected $request;
 
     protected $placeHolders = array();
 
@@ -97,10 +99,7 @@ class WebApiContext implements ApiClientAwareContext
     public function iSendARequest($method, $url)
     {
         $url = $this->prepareUrl($url);
-        $this->request = $this->getClient()->createRequest($method, $url);
-        if (!empty($this->headers)) {
-            $this->request->addHeaders($this->headers);
-        }
+        $this->request = new Request($method, $url, $this->getHeaders());
 
         $this->sendRequest();
     }
@@ -123,13 +122,7 @@ class WebApiContext implements ApiClientAwareContext
             $fields[$key] = $this->replacePlaceHolder($val);
         }
 
-        $bodyOption = array(
-          'body' => json_encode($fields),
-        );
-        $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
-        if (!empty($this->headers)) {
-            $this->request->addHeaders($this->headers);
-        }
+        $this->request = new Request($method, $url, $this->getHeaders(), json_encode($fields));
 
         $this->sendRequest();
     }
@@ -147,15 +140,8 @@ class WebApiContext implements ApiClientAwareContext
     {
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
+        $this->request = new Request($method, $url, $this->getHeaders(), $string);
 
-        $this->request = $this->getClient()->createRequest(
-            $method,
-            $url,
-            array(
-                'headers' => $this->getHeaders(),
-                'body' => $string,
-            )
-        );
         $this->sendRequest();
     }
 
@@ -174,13 +160,17 @@ class WebApiContext implements ApiClientAwareContext
         $body = $this->replacePlaceHolder(trim($body));
 
         $fields = array();
+        $requestFields = [];
         parse_str(implode('&', explode("\n", $body)), $fields);
-        $this->request = $this->getClient()->createRequest($method, $url);
-        /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
-        $requestBody = $this->request->getBody();
+
         foreach ($fields as $key => $value) {
-            $requestBody->setField($key, $value);
+            $requestFields[] = sprintf('%s=%s', urlencode($key), urlencode($value));
         }
+
+        $requestBody = implode('&', $requestFields);
+
+        $headers = array_merge($this->getHeaders(), ['Content-Type' => 'application/x-www-form-urlencoded']);
+        $this->request = new Request($method, $url, $headers, $requestBody);
 
         $this->sendRequest();
     }
@@ -241,7 +231,7 @@ class WebApiContext implements ApiClientAwareContext
     public function theResponseShouldContainJson(PyStringNode $jsonString)
     {
         $etalon = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
-        $actual = $this->response->json();
+        $actual = json_decode($this->response->getBody(), true);
 
         if (null === $etalon) {
             throw new \RuntimeException(
@@ -268,8 +258,8 @@ class WebApiContext implements ApiClientAwareContext
 
         echo sprintf(
             "%s %s => %d:\n%s",
-            $request->getMethod(),
-            $request->getUrl(),
+            $this->request->getMethod(),
+            $this->request->getUri(),
             $response->getStatusCode(),
             $response->getBody()
         );
