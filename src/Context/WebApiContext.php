@@ -130,7 +130,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function iSendARequestToPath($method, $path, TableNode $table = null)
     {
-        $url     = $this->getUrlFromPath($path);
+        $url     = $this->getUrlFromPath($path, $method);
         $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {
             $body = new PostBody();
@@ -152,7 +152,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function iSendARequestWithField($method, $path, $field, TableNode $table = null)
     {
-        $url     = $this->getUrlFromPath($path);
+        $url     = $this->getUrlFromPath($path, $method);
         $request = $this->client->createRequest($method, $url,
             ['headers' => $this->getHeadersBag()->all()]);
         if (null !== $table) {

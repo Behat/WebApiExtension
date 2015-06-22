@@ -2,8 +2,10 @@
 
 namespace Behat\WebApiExtension\Context;
 
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -63,12 +65,23 @@ class RouterContext implements KernelAwareContext
      * Generates a url from a given patch
      *
      * @param $path
+     * @param $method
      * @return string
      */
-    protected function getUrlFromPath($path)
+    protected function getUrlFromPath($path, $method = 'GET')
     {
+        try {
+            $baseUrl = $this->kernel->getContainer()->getParameter('router.request_context.base_url');
+        } catch (InvalidArgumentException $e) {
+            $baseUrl = '';
+        }
+
+        $requestContext = new RequestContext($baseUrl, $method);
+        $router         = $this->getRouter();
+        $router->setContext($requestContext);
+
         $urlStack = parse_url($path);
-        $info     = $this->getRouter()->match($urlStack['path']);
+        $info     = $router->match($urlStack['path']);
         $route    = $info['_route'];
         unset($info['_route']);
 
