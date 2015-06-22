@@ -77,7 +77,7 @@ class RouterContext implements KernelAwareContext
         }
 
         try {
-            $host = $this->kernel->getContainer()->getParameter('router.request_context.base_url');
+            $host = $this->kernel->getContainer()->getParameter('router.request_context.host');
         } catch (InvalidArgumentException $e) {
             $host = 'localhost';
         }
