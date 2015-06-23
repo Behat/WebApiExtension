@@ -148,7 +148,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      * @param string $field
      * @param TableNode $table
      *
-     * @When /^(?:I )?send a (PUT|PATH|POST) request to path "([^"]+)" with field (\w+)$/
+     * @When /^(?:I )?send a (PUT|PATCH|POST) request to path "([^"]+)" with field (\w+)$/
      */
     public function iSendARequestWithField($method, $path, $field, TableNode $table = null)
     {
