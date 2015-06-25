@@ -161,6 +161,70 @@ Feature: Test app verification
       1 scenario (1 passed)
       """
 
+  Scenario: Sending values with placeholders
+    Given a file named "features/send_values.feature" with:
+      """
+      Feature: Exercise WebApiContext data sending
+        In order to validate the send request step
+        As a context developer
+        I need to be able to send a request with values in a scenario
+
+        Scenario:
+          When I send a POST request to "echo" with values:
+          | name | name |
+          | pass | pass |
+          Then the response should contain "POST"
+          And the response should contain json:
+          '''
+          {
+          "name" : "name",
+          "pass": "%[a-z]+%"
+          }
+          '''
+      """
+    When I run "behat features/send_values.feature"
+    Then it should pass with:
+      """
+      ...
+
+      1 scenario (1 passed)
+      """
+
+  Scenario: Validates sent values with placeholders
+    Given a file named "features/send_values.feature" with:
+      """
+      Feature: Exercise WebApiContext data sending
+        In order to validate the send request step
+        As a context developer
+        I need to be able to send a request with values in a scenario
+
+        Scenario:
+          When I send a POST request to "echo" with values:
+          | name | name |
+          | pass | 123  |
+          Then the response should contain "POST"
+          And the response should contain json:
+          '''
+          {
+          "name" : "name",
+          "pass": "%[a-z]+%"
+          }
+          '''
+      """
+    When I run "behat features/send_values.feature"
+    Then it should fail with:
+      """
+      ..F
+
+      --- Failed steps:
+
+          And the response should contain json: # features/send_values.feature:11
+            Failed asserting that '123' matches PCRE pattern "/[a-z]+/".
+
+      1 scenario (1 failed)
+      3 steps (2 passed, 1 failed)
+      """
+
   Scenario: Error responses should work
     Given a file named "features/error_handling.feature" with:
       """

@@ -230,20 +230,46 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldContainJson(PyStringNode $jsonString)
     {
-        $etalon = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
+        $expected = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
         $actual = json_decode($this->response->getBody(), true);
 
-        if (null === $etalon) {
+        if (null === $expected) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+              "Can not convert expected to json:\n".$this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
+        Assertions::assertGreaterThanOrEqual(count($expected), count($actual));
+        $this->assertContains($expected, $actual);
+    }
+
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
+    protected function assertContains($expected, $actual)
+    {
+        if (is_array($expected)) {
+            foreach ($expected as $key => $needle) {
+                $actualValue = (isset($actual[$key])) ? $actual[$key] : null;
+                $this->assertContains($needle, $actualValue);
+            }
+
+            return;
         }
+
+        if ($expected == '*') {
+            return;
+        }
+
+        if (preg_match('/^\%.+\%$/', $expected, $result)) {
+            $pattern = sprintf('/%s/', trim($result[0], '%'));
+            Assertions::assertRegExp($pattern, $actual);
+
+            return;
+        }
+
+        Assertions::assertEquals($expected, $actual, 'JSON equality');
     }
 
     /**
@@ -263,6 +289,14 @@ class WebApiContext implements ApiClientAwareContext
             $response->getStatusCode(),
             $response->getBody()
         );
+    }
+
+    /**
+     * @return \GuzzleHttp\Message\ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 
     /**
