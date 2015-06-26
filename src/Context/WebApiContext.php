@@ -126,7 +126,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      * @param string $path
      * @param TableNode $table
      *
-     * @When /^(?:I )?send a (GET|PUT|DELETE) request to path "([^"]+)"$/
+     * @When /^(?:I )?send a (GET|PUT|DELETE|PATCH|POST) request to path "([^"]+)"$/
      */
     public function iSendARequestToPath($method, $path, TableNode $table = null)
     {
@@ -135,6 +135,21 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
         if (null !== $table) {
             $body = new PostBody();
             $body->replaceFields($table->getRowsHash());
+            $request->setBody($body);
+        }
+        $this->send($request);
+    }
+
+    /**
+     * @When /^(?:I )?send a (PUT|PATCH|POST) request to path "([^"]+)" with payload$/
+     */
+    public function iSendARequestToPathWithPayload($method, $path, PyStringNode $payload)
+    {
+        $url     = $this->getUrlFromPath($path, $method);
+        $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
+        if (null !== $payload) {
+            $body = new PostBody();
+            $body->replaceFields(json_decode($payload->getRaw(), true));
             $request->setBody($body);
         }
         $this->send($request);
