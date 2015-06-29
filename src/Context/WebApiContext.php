@@ -75,6 +75,17 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
         $authorization = base64_encode($username . ':' . $password);
         $this->getHeadersBag()->set('Authorization', 'Basic ' . $authorization);
     }
+    
+    
+    /**
+     * Set value to specific header
+     *
+     * @Given /^Header "([^"]*)" has value "([^"]+)"$/
+     */
+    public function iSetHeaderWithValue($header, $value)
+    {
+        $this->getHeadersBag()->set($header, $value);
+    }
 
     /**
      * Sends HTTP request to specific route.
