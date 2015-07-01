@@ -164,7 +164,13 @@ class WebApiContext implements ApiClientAwareContext
         parse_str(implode('&', explode("\n", $body)), $fields);
 
         foreach ($fields as $key => $value) {
-            $requestFields[] = sprintf('%s=%s', urlencode($key), urlencode($value));
+            if(is_array($value)) {
+                foreach ($value as $formKey => $formValue) {
+                    $requestFields[] = sprintf('%s[%s]=%s', urlencode($key), urlencode($formKey), urlencode($formValue));
+                }
+            } else {
+                $requestFields[] = sprintf('%s=%s', urlencode($key), urlencode($value));
+            }
         }
 
         $requestBody = implode('&', $requestFields);
