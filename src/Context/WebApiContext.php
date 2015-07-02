@@ -166,7 +166,7 @@ class WebApiContext implements ApiClientAwareContext
         foreach ($fields as $key => $value) {
             if(is_array($value)) {
                 foreach ($value as $formKey => $formValue) {
-                    $requestFields[] = sprintf('%s[%s]=%s', urlencode($key), urlencode($formKey), urlencode($formValue));
+                    $requestFields[] = sprintf('%s%s=%s', urlencode($key), urlencode('[' . $formKey . ']'), urlencode($formValue));
                 }
             } else {
                 $requestFields[] = sprintf('%s=%s', urlencode($key), urlencode($value));
