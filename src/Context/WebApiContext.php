@@ -264,7 +264,7 @@ class WebApiContext implements ApiClientAwareContext
             return;
         }
 
-        if ($expected == '*') {
+        if ($expected === '*') {
             return;
         }
 
