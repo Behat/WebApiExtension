@@ -14,7 +14,6 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use PHPUnit_Framework_Assert as Assertions;
 
 /**
  * Provides web API description definitions.
@@ -196,7 +195,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
-        Assertions::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual, sprintf('The response code was %s, not %s', $actual, $expected));
     }
 
     /**
@@ -210,7 +209,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/i';
         $actual = (string) $this->response->getBody();
-        Assertions::assertRegExp($expectedRegexp, $actual);
+        $this->assertRegex($expectedRegexp, $actual, 'Response body does not contain the specified text');
     }
 
     /**
@@ -224,7 +223,12 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/';
         $actual = (string) $this->response->getBody();
-        Assertions::assertNotRegExp($expectedRegexp, $actual);
+        $this->assertNegative(
+            function () use ($expectedRegexp, $actual) {
+                $this->assertRegex($expectedRegexp, $actual);
+            },
+            'Response body contains the specified text'
+        );
     }
 
     /**
@@ -244,15 +248,13 @@ class WebApiContext implements ApiClientAwareContext
         $actual = $this->response->json();
 
         if (null === $etalon) {
-            throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+            throw new \LogicException(
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
-
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
         foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
+            $this->assertArrayHasKey($key, $actual, sprintf('Does not contain the key "%s"', $key));
+            $this->assertEquals($etalon[$key], $actual[$key], sprintf('Value for the key "%s" does not match', $key));
         }
     }
 
@@ -378,5 +380,46 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         return $this->client;
+    }
+
+    private function assertNegative($callable, $message = 'Passed')
+    {
+        try {
+            call_user_func($callable);
+        } catch (ExpectationException $e) {
+            return;
+        }
+
+        throw new ExpectationException($message);
+    }
+
+    private function assertEquals($expected, $actual, $message = 'Not equal')
+    {
+        if ($actual != $expected) {
+            throw new ExpectationException($message);
+        }
+    }
+
+    private function assertSame($expected, $actual, $message = 'Not the same')
+    {
+        if ($actual !== $expected) {
+            throw new ExpectationException($message);
+        }
+    }
+
+    private function assertArrayHasKey($key, array $array, $message = 'Does not have key') {
+        if (!array_key_exists($key, $array)) {
+            throw new ExpectationException($message);
+        }
+    }
+
+    private function assertRegex($pattern, $subject, $message = 'Does not match') {
+        $result = preg_match($pattern, $subject);
+
+        if (false === $result) {
+            throw new \LogicException('Invalid regular expression');
+        } elseif (0 === $result) {
+            throw new ExpectationException($message);
+        }
     }
 }
