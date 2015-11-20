@@ -263,7 +263,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         foreach ($etalon as $key => $needle) {
             if(is_array($needle)) {
-                $this->assertEtalonKeyValuesEqualActual($etalon[$key], $actual[$key]);
+                $this->assertEtalonKeyValuesEqualsActual($etalon[$key], $actual[$key]);
 
                 continue;
             }
