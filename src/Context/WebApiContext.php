@@ -250,7 +250,23 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
+        $this->assertEtalonKeyValuesEqualsActual($etalon, $actual);
+    }
+
+    /**
+     * Asserts that *only* the keys defined in etalon exist and are equal to the values defined in actual.
+     *
+     * @param array $etalon
+     * @param array $actual
+     */
+    private function assertEtalonKeyValuesEqualsActual(array $etalon, array $actual)
+    {
         foreach ($etalon as $key => $needle) {
+            if(is_array($needle)) {
+                $this->assertEtalonKeyValuesEqualActual($etalon[$key], $actual[$key]);
+
+                continue;
+            }
             Assertions::assertArrayHasKey($key, $actual);
             Assertions::assertEquals($etalon[$key], $actual[$key]);
         }
