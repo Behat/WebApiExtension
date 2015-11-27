@@ -340,7 +340,9 @@ class WebApiContext implements ApiClientAwareContext
                 $this->headers[$name] = array($this->headers[$name]);
             }
 
-            $this->headers[$name][] = $value;
+            if (!in_array($value, $this->headers[$name])) {
+                $this->headers[$name][] = $value;
+            }
         } else {
             $this->headers[$name] = $value;
         }
