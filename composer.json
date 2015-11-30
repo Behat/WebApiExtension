@@ -20,6 +20,7 @@
         "php": ">=5.4",
         "behat/behat": "~3.0",
         "guzzlehttp/guzzle": "4 - 5",
+        "intellectsoft-uk/assert": "*@dev",
         "phpunit/phpunit": "~4.0"
     },
 
@@ -27,6 +28,11 @@
         "symfony/process": "~2.1",
         "silex/silex": "~1"
     },
+
+    "repositories": [{
+        "type": "vcs",
+        "url": "git@github.com:intellectsoft-uk/assert.git"
+    }],
 
     "autoload": {
         "psr-4": {

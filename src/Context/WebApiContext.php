@@ -15,6 +15,7 @@ use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_Assert as Assertions;
+use Isdev\Assert\Assertion as JsonAssert;
 
 /**
  * Provides web API description definitions.
@@ -124,7 +125,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -240,20 +241,10 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldContainJson(PyStringNode $jsonString)
     {
-        $etalon = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
-        $actual = $this->response->json();
+        $etalon = $this->replacePlaceHolder($jsonString->getRaw());
+        $actual = $this->response->getBody();
 
-        if (null === $etalon) {
-            throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
-            );
-        }
-
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
-        }
+        JsonAssert::jsonStringMatchJsonString($etalon, $actual);
     }
 
     /**
