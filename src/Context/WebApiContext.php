@@ -273,6 +273,42 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that JSON response key equals the value specified.
+     *
+     * Do not check that the response body /only/ contains the JSON from PyString,
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @Then /^(?:the )?response key "([^"]*)" should equal "([^"]*)"$/
+     */
+    public function theResponseKeyShouldEqual($key, $value)
+    {
+        $actual = $this->response->json();
+
+        Assertions::assertArrayHasKey($key, $actual);
+        Assertions::assertEquals($value, $actual[$key]);
+    }
+
+    /**
+     * Checks that JSON response key matches the value specified.
+     *
+     * Do not check that the response body /only/ contains the JSON from PyString,
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @Then /^(?:the )?response key "([^"]*)" should match "([^"]*)"$/
+     */
+    public function theResponseKeyShouldMatch($key, $value)
+    {
+        $actual = $this->response->json();
+
+        Assertions::assertArrayHasKey($key, $actual);
+        Assertions::assertRegExp($value, $actual[$key]);
+    }
+
+    /**
      * Prints last response body.
      *
      * @Then print response
