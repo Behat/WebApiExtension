@@ -124,7 +124,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -245,67 +245,15 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
         Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        $this->assertEtalonKeyValuesEqualsActual($etalon, $actual);
-    }
-
-    /**
-     * Asserts that *only* the keys defined in etalon exist and are equal to the values defined in actual.
-     *
-     * @param array $etalon
-     * @param array $actual
-     */
-    private function assertEtalonKeyValuesEqualsActual(array $etalon, array $actual)
-    {
         foreach ($etalon as $key => $needle) {
-            if(is_array($needle)) {
-                $this->assertEtalonKeyValuesEqualsActual($etalon[$key], $actual[$key]);
-
-                continue;
-            }
             Assertions::assertArrayHasKey($key, $actual);
             Assertions::assertEquals($etalon[$key], $actual[$key]);
         }
-    }
-
-    /**
-     * Checks that JSON response key equals the value specified.
-     *
-     * Do not check that the response body /only/ contains the JSON from PyString,
-     *
-     * @param string $key
-     * @param string $value
-     *
-     * @Then /^(?:the )?response key "([^"]*)" should equal "([^"]*)"$/
-     */
-    public function theResponseKeyShouldEqual($key, $value)
-    {
-        $actual = $this->response->json();
-
-        Assertions::assertArrayHasKey($key, $actual);
-        Assertions::assertEquals($value, $actual[$key]);
-    }
-
-    /**
-     * Checks that JSON response key matches the value specified.
-     *
-     * Do not check that the response body /only/ contains the JSON from PyString,
-     *
-     * @param string $key
-     * @param string $value
-     *
-     * @Then /^(?:the )?response key "([^"]*)" should match "([^"]*)"$/
-     */
-    public function theResponseKeyShouldMatch($key, $value)
-    {
-        $actual = $this->response->json();
-
-        Assertions::assertArrayHasKey($key, $actual);
-        Assertions::assertRegExp($value, $actual[$key]);
     }
 
     /**
