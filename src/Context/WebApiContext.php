@@ -124,7 +124,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -245,7 +245,7 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
@@ -378,5 +378,21 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         return $this->client;
+    }
+
+    /**
+     * @return \GuzzleHttp\Message\RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return \GuzzleHttp\Message\ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
