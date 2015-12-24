@@ -284,8 +284,8 @@ class WebApiContext implements ApiClientAwareContext
 
         echo sprintf(
             "%s %s => %d:\n%s",
-            $request->method,
-            $request->url,
+            $request['method'],
+            $request['url'],
             $response->getStatusCode(),
             $response->getBody()
         );
