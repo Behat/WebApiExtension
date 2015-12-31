@@ -20,35 +20,39 @@ use PHPUnit_Framework_Assert as Assertions;
  * Provides web API description definitions.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ * @author Tomaz Ahlin <tomaz.ahlin2@gmail.com> (Improvements only)
  */
 class WebApiContext implements ApiClientAwareContext
 {
     /**
      * @var string
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var \GuzzleHttp\Message\RequestInterface
      */
-    private $request;
+    protected $request;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface
      */
-    private $response;
+    protected $response;
 
-    private $placeHolders = array();
+    /**
+     * @var array
+     */
+    protected $placeHolders = array();
 
     /**
      * {@inheritdoc}
@@ -124,7 +128,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -174,8 +178,17 @@ class WebApiContext implements ApiClientAwareContext
         $body = $this->replacePlaceHolder(trim($body));
 
         $fields = array();
-        parse_str(implode('&', explode("\n", $body)), $fields);
+
+        $dataLines = explode("\n", $body);
+        foreach($dataLines as $line) {
+            $line = explode('=', $line);
+            $fields[$line[0]] = $line[1];
+        }
+
         $this->request = $this->getClient()->createRequest($method, $url);
+        if (!empty($this->headers)) {
+            $this->request->addHeaders($this->headers);
+        }
         /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
         $requestBody = $this->request->getBody();
         foreach ($fields as $key => $value) {
@@ -228,6 +241,145 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response is json and stores the data to array.
+     *
+     * @Then /^(?:the )?response should be json$/
+     */
+    public function theResponseShouldBeJson()
+    {
+        $data = json_decode($this->response->getBody(), true);
+        Assertions::assertNotFalse($data);
+    }
+
+    /**
+     * Checks that response is json and it contains desired keys.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $subKeys
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with "(at least|exactly)" "([^"]*)"$/
+     */
+    public function theResponseShouldContainKeys($key, $type, $subKeys)
+    {
+        $this->theResponseShouldContainOneItem($key, $type, $subKeys, false);
+    }
+
+    /**
+     * Checks that response is json and it contains desired keys and values.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $subKeys
+     * @param string $subKeyValues
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with "(at least|exactly)" "([^"]*)" with values "([^"]*)"$/
+     */
+    public function theResponseShouldContainKeysAndValues($key, $type, $subKeys, $subKeyValues)
+    {
+        $this->theResponseShouldContainOneItem($key, $type, $subKeys, true, $subKeyValues);
+    }
+
+    /**
+     * Checks that response is json and stores the data to array.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $subKeys
+     * @param boolean $compareValues
+     * @param string $subKeyValues
+     */
+    private function theResponseShouldContainOneItem($key, $type, $subKeys, $compareValues, $subKeyValues = '')
+    {
+        $data = json_decode($this->response->getBody(), true);
+        Assertions::assertNotFalse($data);
+
+        $subKeys = array_map('trim', explode(',', $subKeys));
+        $subKeyValues  = array_map('trim', explode(',', $subKeyValues));
+
+        if ($compareValues) {
+            Assertions::assertEquals(count($subKeyValues), count($subKeys));
+        }
+
+        Assertions::assertArrayHasKey('data', $data);
+
+        for ($j=0, $c=count($subKeys); $j<$c; $j++) {
+            $subKey = $subKeys[$j];
+            if ($this->isExactType($type)) {
+                Assertions::assertEquals(count($subKeys), count($data[$key]));
+            }
+            Assertions::assertArrayHasKey($subKey, $data[$key]);
+            if ($compareValues) {
+                Assertions::assertEquals($subKeyValues[$j], $data[$key][$subKey]);
+            }
+        }
+    }
+
+    /**
+     * Checks that response is json and contains the expected number of items with the desired keys.
+     *
+     * @param string $key
+     * @param integer $n
+     * @param string $type
+     * @param string $subKeys
+     *
+     * @Then /^(?:the )?response should contain "([^"]*)" with (\d+) items containing "(at least|exactly)" "([^"]*)"$/
+     */
+    public function theResponseShouldContainItemsWithKeys($key, $n, $type, $subKeys)
+    {
+        $this->theResponseShouldContainItems($key, $n, $type, $subKeys, false);
+    }
+
+    /**
+     * Checks that response is json and contains the expected number of items with the desired keys.
+     *
+     * @param string $key
+     * @param integer $n
+     * @param string $type
+     * @param string $subKeys
+     * @param boolean $compareValues
+     * @param string $subKeyValues
+     */
+    private function theResponseShouldContainItems($key, $n, $type, $subKeys, $compareValues, $subKeyValues = '')
+    {
+        $data = json_decode($this->response->getBody(), true);
+        Assertions::assertNotFalse($data);
+
+        $subKeys = array_map('trim', explode(',', $subKeys));
+        $subKeyValues  = array_map('trim', explode(',', $subKeyValues));
+
+        if ($compareValues) {
+            Assertions::assertEquals(count($subKeyValues), count($subKeys));
+        }
+
+        Assertions::assertArrayHasKey($key, $data);
+        Assertions::assertEquals($n, count($data[$key]));
+
+        for ($i=0; $i<$n; $i++) {
+            for ($j=0, $c=count($subKeys); $j<$c; $j++) {
+                $subKey = $subKeys[$j];
+                Assertions::assertArrayHasKey($i, $data[$key]);
+                if ($this->isExactType($type)) {
+                    Assertions::assertEquals(count($subKeys), count($data[$key][$i]));
+                }
+                Assertions::assertArrayHasKey($subKey, $data[$key][$i]);
+                if ($compareValues) {
+                    Assertions::assertEquals($subKeyValues[$j], $data[$key][$i][$subKey]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $type
+     * @returns boolean
+     */
+    private function isExactType($type)
+    {
+        return $type === 'exactly';
+    }
+
+    /**
      * Checks that response body contains JSON from PyString.
      *
      * Do not check that the response body /only/ contains the JSON from PyString,
@@ -245,7 +397,7 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
