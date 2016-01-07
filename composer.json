@@ -1,5 +1,5 @@
 {
-    "name": "czarnolecki/web-api-extension",
+    "name": "ifxtech/web-api-extension",
     "type": "behat-extension",
     "description": "Web API extension for Behat",
     "keywords": [
