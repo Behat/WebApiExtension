@@ -10,11 +10,12 @@
 
 namespace Behat\WebApiExtension\Context;
 
+use Assert\Assertion;
+use Assert\InvalidArgumentException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use PHPUnit_Framework_Assert as Assertions;
 
 /**
  * Provides web API description definitions.
@@ -196,7 +197,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
-        Assertions::assertSame($expected, $actual);
+        Assertion::same($actual, $expected);
     }
 
     /**
@@ -210,7 +211,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/i';
         $actual = (string) $this->response->getBody();
-        Assertions::assertRegExp($expectedRegexp, $actual);
+        Assertion::regex($actual, $expectedRegexp);
     }
 
     /**
@@ -224,7 +225,15 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/';
         $actual = (string) $this->response->getBody();
-        Assertions::assertNotRegExp($expectedRegexp, $actual);
+
+        try {
+            Assertion::regex($actual, $expectedRegexp);
+        } catch (InvalidArgumentException $e) {
+            return;
+        }
+
+        $message = sprintf('Value "%s" matches expression.', $actual);
+        throw new InvalidArgumentException($message, Assertion::INVALID_REGEX, null, $actual, ['pattern' => $expectedRegexp]);
     }
 
     /**
@@ -249,10 +258,10 @@ class WebApiContext implements ApiClientAwareContext
             );
         }
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
+        Assertion::greaterOrEqualThan(count($actual), count($etalon));
         foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
+            Assertion::keyExists($actual, $key);
+            Assertion::eq($actual[$key], $etalon[$key]);
         }
     }
 
