@@ -25,7 +25,7 @@ Feature: client aware context
            * @Then /^the client should be set$/
            */
           public function theClientShouldBeSet() {
-              Assertion::isInstanceOf($this->client, ClientInterface::class);
+              Assertion::isInstanceOf($this->client, 'GuzzleHttp\ClientInterface');
           }
       }
       """
