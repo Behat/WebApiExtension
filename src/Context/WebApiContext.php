@@ -51,6 +51,9 @@ class WebApiContext implements ApiClientAwareContext
      */
     private $response;
 
+    /**
+     * @var array
+     */
     private $placeHolders = array();
 
     /**
