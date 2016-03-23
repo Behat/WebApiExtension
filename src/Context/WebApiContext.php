@@ -29,29 +29,29 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * @var string
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var \GuzzleHttp\Message\RequestInterface|RequestInterface
      */
-    private $request;
+    protected $request;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface|ResponseInterface
      */
-    private $response;
+    protected $response;
 
-    private $placeHolders = array();
+    protected $placeHolders = array();
 
     /**
      * {@inheritdoc}
