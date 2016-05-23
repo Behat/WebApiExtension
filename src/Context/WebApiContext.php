@@ -13,12 +13,12 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Post\PostBody;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use PHPUnit_Framework_Assert as Assertions;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 /**
  * Provides web API description definitions.
@@ -75,8 +75,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
         $authorization = base64_encode($username . ':' . $password);
         $this->getHeadersBag()->set('Authorization', 'Basic ' . $authorization);
     }
-    
-    
+
+
     /**
      * Set value to specific header
      *
@@ -99,12 +99,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequest($method, $route, TableNode $table = null)
     {
         $url     = $this->getUrl($route);
-        $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
-        if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields($table->getRowsHash());
-            $request->setBody($body);
-        }
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), $table->getRowsHash());
         $this->send($request);
     }
 
@@ -120,13 +115,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendAPostRequestWithField($route, $field, TableNode $table = null)
     {
         $url     = $this->getUrl($route);
-        $request = $this->client->createRequest(Request::METHOD_POST, $url,
-            ['headers' => $this->getHeadersBag()->all()]);
-        if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields([$field => $table->getRowsHash()]);
-            $request->setBody($body);
-        }
+        $request = new GuzzleRequest(Request::METHOD_POST, $url, $this->getHeadersBag()->all(), null !== $table ? [$field => $table->getRowsHash()] : null);
         $this->send($request);
     }
 
@@ -142,12 +131,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequestToPath($method, $path, TableNode $table = null)
     {
         $url     = $this->getUrlFromPath($path, $method);
-        $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
-        if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields($table->getRowsHash());
-            $request->setBody($body);
-        }
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? $table->getRowsHash() : null);
         $this->send($request);
     }
 
@@ -157,12 +141,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequestToPathWithPayload($method, $path, PyStringNode $payload)
     {
         $url     = $this->getUrlFromPath($path, $method);
-        $request = $this->client->createRequest($method, $url, ['headers' => $this->getHeadersBag()->all()]);
-        if (null !== $payload) {
-            $body = new PostBody();
-            $body->replaceFields(json_decode($payload->getRaw(), true));
-            $request->setBody($body);
-        }
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), $payload->getRaw());
         $this->send($request);
     }
 
@@ -179,13 +158,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequestWithField($method, $path, $field, TableNode $table = null)
     {
         $url     = $this->getUrlFromPath($path, $method);
-        $request = $this->client->createRequest($method, $url,
-            ['headers' => $this->getHeadersBag()->all()]);
-        if (null !== $table) {
-            $body = new PostBody();
-            $body->replaceFields([$field => $table->getRowsHash()]);
-            $request->setBody($body);
-        }
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? [$field => $table->getRowsHash()] : null);
         $this->send($request);
     }
 
@@ -304,7 +277,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     {
         try {
             $this->response = $this->client->send($request);
-            $this->jsonResponse = $this->response->json();
+            $this->jsonResponse = json_decode((string) $this->response->getBody(), true);
         } catch (ClientException $e) {
             $this->response = $e->getResponse();
             //when 404 or 401 or 403 or something else
