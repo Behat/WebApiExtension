@@ -298,7 +298,7 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
-     * @return \GuzzleHttp\Message\ResponseInterface
+     * @return ResponseInterface
      */
     public function getResponse()
     {
