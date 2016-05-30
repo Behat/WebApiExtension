@@ -387,6 +387,16 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
+    /**
+     * Returns the response object
+     *
+     * @return \GuzzleHttp\Message\ResponseInterface|ResponseInterface
+     */
+    protected function getResponse()
+    {
+        return $this->response;
+    }
+
     private function sendRequest()
     {
         try {
