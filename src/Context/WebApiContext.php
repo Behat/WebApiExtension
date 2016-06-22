@@ -277,7 +277,9 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     {
         try {
             $this->response = $this->client->send($request);
-            $this->jsonResponse = json_decode((string) $this->response->getBody(), true);
+            if((string)$this->response->getBody()) {
+                $this->jsonResponse = json_decode((string) $this->response->getBody(), true);
+            }
         } catch (ClientException $e) {
             $this->response = $e->getResponse();
             //when 404 or 401 or 403 or something else
