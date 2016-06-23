@@ -110,6 +110,41 @@ Feature: Test app verification
       1 scenario (1 passed)
       """
 
+  Scenario: Sending raw xml-formatted data
+    Given a file named "features/send_raw_xml.feature" with:
+      """
+      Feature: Exercise WebApiContext data sending
+        In order to validate the send request step
+        As a context developer
+        I need to be able to send a request with values in a scenario
+
+        Scenario:
+          Given I set header "content-type" with value "application/xml"
+          And I set header "accept" with value "application/xml"
+          When I send a POST request to "echo" with body:
+          '''
+          <data>
+            <name>name</name>
+            <pass>pass</pass>
+          </data>
+          '''
+          Then the response should contain "POST"
+          And the response should contain xml:
+          '''
+          <data>
+            <name>name</name>
+            <pass>pass</pass>
+          </data>
+          '''
+      """
+    When I run "behat features/send_raw.feature"
+    Then it should pass with:
+      """
+      ....
+
+      1 scenario (1 passed)
+      """
+
   Scenario: Sending HEAD requests
     Given a file named "features/send_request.feature" with:
       """
