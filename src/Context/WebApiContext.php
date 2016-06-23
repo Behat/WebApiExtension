@@ -286,6 +286,25 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that response body contains XML from PyString.
+     *
+     * Do not check that the response body /only/ contains the XML from PyString,
+     *
+     * @param PyStringNode $xmlString
+     *
+     * @throws \RuntimeException
+     *
+     * @Then /^(?:the )?response should contain xml:$/
+     */
+    public function theResponseShouldContainXml(PyStringNode $xmlString)
+    {
+        $expected = $this->replacePlaceHolder($xmlString->getRaw());
+        $actual = (string) $this->response->getBody();
+
+        Assertions::assertXmlStringEqualsXmlString($expected, $actual);
+    }
+
+    /**
      * Prints last response body.
      *
      * @Then print response

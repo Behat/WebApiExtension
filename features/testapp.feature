@@ -27,6 +27,7 @@ Feature: Test app verification
         I need to be able to send a request with values in a scenario
 
         Scenario:
+          Given I set header "accept" with value "application/json"
           When I send a POST request to "echo" with form data:
           '''
           name=name&pass=pass
@@ -57,7 +58,34 @@ Feature: Test app verification
         I need to be able to send a request with values in a scenario
 
         Scenario:
+          Given I set header "content-type" with value "text/plain"
+          And I set header "accept" with value "text/plain"
+          When I send a POST request to "echo" with body:
+          '''
+          name and pass
+          '''
+          Then the response should contain "POST"
+          And the response should contain "name and pass"
+      """
+    When I run "behat features/send_raw.feature"
+    Then it should pass with:
+      """
+      ....
+
+      1 scenario (1 passed)
+      """
+
+  Scenario: Sending raw json-formatted data
+    Given a file named "features/send_raw_json.feature" with:
+      """
+      Feature: Exercise WebApiContext data sending
+        In order to validate the send request step
+        As a context developer
+        I need to be able to send a request with values in a scenario
+
+        Scenario:
           Given I set header "content-type" with value "application/json"
+          And I set header "accept" with value "application/json"
           When I send a POST request to "echo" with body:
           '''
           {
@@ -74,7 +102,42 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_raw.feature"
+    When I run "behat features/send_raw_json.feature"
+    Then it should pass with:
+      """
+      ....
+
+      1 scenario (1 passed)
+      """
+
+  Scenario: Sending raw xml-formatted data
+    Given a file named "features/send_raw_xml.feature" with:
+      """
+      Feature: Exercise WebApiContext data sending
+        In order to validate the send request step
+        As a context developer
+        I need to be able to send a request with values in a scenario
+
+        Scenario:
+          Given I set header "content-type" with value "application/xml"
+          And I set header "accept" with value "application/xml"
+          When I send a POST request to "echo" with body:
+          '''
+          <data>
+            <name>name</name>
+            <pass>pass</pass>
+          </data>
+          '''
+          Then the response should contain "POST"
+          And the response should contain xml:
+          '''
+          <data>
+            <name>name</name>
+            <pass>pass</pass>
+          </data>
+          '''
+      """
+    When I run "behat features/send_raw_xml.feature"
     Then it should pass with:
       """
       ....
@@ -141,6 +204,7 @@ Feature: Test app verification
         I need to be able to send a request with values in a scenario
 
         Scenario:
+          Given I set header "accept" with value "application/json"
           When I send a POST request to "echo" with values:
           | name | name |
           | pass | pass |
