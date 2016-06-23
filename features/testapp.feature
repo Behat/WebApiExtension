@@ -137,7 +137,7 @@ Feature: Test app verification
           </data>
           '''
       """
-    When I run "behat features/send_raw.feature"
+    When I run "behat features/send_raw_xml.feature"
     Then it should pass with:
       """
       ....
