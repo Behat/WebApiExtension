@@ -28,14 +28,22 @@ $app->match(
         /** @var string $content */
         $content = $req->getContent(false);
         if (!empty($content)) {
-            $data = json_decode($content, true);
-            if (!is_array($data)) {
-                $ret['content'] = $content;
-            } else {
-                foreach ($data as $key => $value) {
-                    $ret[$key] = $value;
+
+            if ('application/json' == $req->getContentType()) {
+
+                $data = json_decode($content, true);
+                if (!is_array($data)) {
+                    $ret['content'] = $content;
+                } else {
+                    foreach ($data as $key => $value) {
+                        $ret[$key] = $value;
+                    }
                 }
+
+            } else {
+                $ret['content'] = $content;
             }
+
         }
 
         $ret['headers'] = array();
