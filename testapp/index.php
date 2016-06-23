@@ -29,7 +29,7 @@ $app->match(
         $content = $req->getContent(false);
         if (!empty($content)) {
 
-            if (0 === strpos($req->headers->get('Content-Type'), 'application/json')) {
+            if (0 === strpos($req->headers->get('Accept'), 'application/json')) {
 
                 $data = json_decode($content, true);
                 if (!is_array($data)) {

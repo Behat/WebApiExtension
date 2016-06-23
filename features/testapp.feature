@@ -27,6 +27,7 @@ Feature: Test app verification
         I need to be able to send a request with values in a scenario
 
         Scenario:
+          Given I set header "accept" with value "application/json"
           When I send a POST request to "echo" with form data:
           '''
           name=name&pass=pass
@@ -58,6 +59,7 @@ Feature: Test app verification
 
         Scenario:
           Given I set header "content-type" with value "text/plain"
+          And I set header "accept" with value "text/plain"
           When I send a POST request to "echo" with body:
           '''
           name and pass
@@ -83,6 +85,7 @@ Feature: Test app verification
 
         Scenario:
           Given I set header "content-type" with value "application/json"
+          And I set header "accept" with value "application/json"
           When I send a POST request to "echo" with body:
           '''
           {
@@ -166,6 +169,7 @@ Feature: Test app verification
         I need to be able to send a request with values in a scenario
 
         Scenario:
+          Given I set header "accept" with value "application/json"
           When I send a POST request to "echo" with values:
           | name | name |
           | pass | pass |
