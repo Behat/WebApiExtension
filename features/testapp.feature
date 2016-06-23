@@ -60,15 +60,10 @@ Feature: Test app verification
           Given I set header "content-type" with value "text/plain"
           When I send a POST request to "echo" with body:
           '''
-          name: name
-          pass: pass
+          name and pass
           '''
           Then the response should contain "POST"
-          And the response should contain:
-          '''
-          name: name
-          pass: pass
-          '''
+          And the response should contain "name and pass"
       """
     When I run "behat features/send_raw.feature"
     Then it should pass with:
