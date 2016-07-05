@@ -286,6 +286,20 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Check if the response header has a specific value.
+     *
+     * @param string $httpHeader
+     * @param string $expected
+     *
+     * @Then /^the response "([^"]*)" header should be "([^"]*)"$/
+     */
+    public function theResponseHeaderShouldBe($httpHeader, $expected)
+    {
+        $actual = $this->response->getHeaderLine($httpHeader);
+        Assertions::assertSame($expected, $actual);
+    }
+
+    /**
      * Prints last response body.
      *
      * @Then print response
