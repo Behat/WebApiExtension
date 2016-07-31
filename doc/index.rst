@@ -44,3 +44,14 @@ The easiest way to keep your suite updated is to use `Composer <http://getcompos
 
 Usage
 -----
+
+Configuring the guzzle client
+
+.. code-block:: yaml
+
+    # behat.yml
+    default:
+      # ...
+      extensions:
+        Behat\WebApiExtension:
+          base_url: https://localhost
