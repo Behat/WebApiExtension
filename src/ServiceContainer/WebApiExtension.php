@@ -54,6 +54,9 @@ class WebApiExtension implements ExtensionInterface
                 ->scalarNode('base_url')
                     ->defaultValue('http://localhost')
                     ->end()
+                ->booleanNode('verify')
+                    ->defaultValue(true)
+                    ->end()
                 ->end()
             ->end();
     }
