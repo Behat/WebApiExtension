@@ -72,7 +72,7 @@ class WebApiExtension implements ExtensionInterface
         // Guzzle 6 BC bridge
         if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
             $config['base_uri'] = $config['base_url'];
-            unset($config['bar_url']);
+            unset($config['base_url']);
 
             if (isset($config['defaults'])) {
                 $defaults = $config['defaults'];
