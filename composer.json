@@ -1,5 +1,5 @@
 {
-    "name": "behat/web-api-extension",
+    "name": "andyOstrava/behat-web-api-extension",
     "type": "behat-extension",
     "description": "Web API extension for Behat",
     "keywords": ["api", "test"],

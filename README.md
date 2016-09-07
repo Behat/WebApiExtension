@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/Behat/WebApiExtension.svg?branch=master)](https://travis-ci.org/Behat/WebApiExtension)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Behat/WebApiExtension/badges/quality-score.png?s=6499e6132229ddab00c3777daf1c74a9f31bee7c)](https://scrutinizer-ci.com/g/Behat/WebApiExtension/)
 
+A fork of the excellent behat/web-api-extension with only small modifications needed to match andyOstrava's workflow.
+
 Provides testing for JSON APIs with Behat 3
 
 ## Documentation
