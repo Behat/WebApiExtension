@@ -195,8 +195,9 @@ class WebApiContext implements ApiClientAwareContext
         parse_str(implode('&', explode("\n", $body)), $fields);
 
         if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
-            $this->request = new Request($method, $url, ['Content-Type' => 'application/x-www-form-urlencoded'], http_build_query($fields, null, '&'));
-        } else {
+            $this->addHeader('Content-Type', 'application/x-www-form-urlencoded');
+	    $this->request = new Request($method, $url, $this->headers, http_build_query($fields, null, '&'));
+	} else {
             $this->request = $this->getClient()->createRequest($method, $url);
             /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
             $requestBody = $this->request->getBody();
