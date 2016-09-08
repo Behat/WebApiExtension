@@ -278,11 +278,7 @@ class WebApiContext implements ApiClientAwareContext
             );
         }
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
-        }
+        $this->compareArrays($etalon, $actual);
     }
 
     /**
@@ -407,5 +403,23 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         return $this->client;
+    }
+
+    /**
+     * @param array $etalon
+     * @param array $actual
+     */
+    private function compareArrays(array $etalon, array $actual)
+    {
+        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
+        foreach ($etalon as $key => $needle) {
+            Assertions::assertArrayHasKey($key, $actual);
+
+            if (is_array($needle)) {
+                $this->compareArrays($etalon[$key], $actual[$key]);
+            } else {
+                Assertions::assertEquals($etalon[$key], $actual[$key]);
+            }
+        }
     }
 }
