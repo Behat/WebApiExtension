@@ -42,12 +42,12 @@ class WebApiContext implements ApiClientAwareContext
     private $headers = array();
 
     /**
-     * @var \GuzzleHttp\Message\RequestInterface|RequestInterface
+     * @var RequestInterface
      */
     private $request;
 
     /**
-     * @var \GuzzleHttp\Message\ResponseInterface|ResponseInterface
+     * @var ResponseInterface
      */
     private $response;
 
@@ -67,13 +67,27 @@ class WebApiContext implements ApiClientAwareContext
      * @param string $username
      * @param string $password
      *
-     * @Given /^I am authenticating as "([^"]*)" with "([^"]*)" password$/
+     * @Given /^I am basic authenticating as "([^"]*)" with "([^"]*)" password$/
      */
-    public function iAmAuthenticatingAs($username, $password)
+    public function iAmBasicAuthenticatingAs($username, $password)
     {
         $this->removeHeader('Authorization');
         $this->authorization = base64_encode($username . ':' . $password);
         $this->addHeader('Authorization', 'Basic ' . $this->authorization);
+    }
+
+    /**
+     * Adds Basic Authentication header to next request.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @Given /^I am authenticating as "([^"]*)" with "([^"]*)" password$/
+     * @deprecated
+     */
+    public function iAmAuthenticatingAs($username, $password)
+    {
+        $this->iAmBasicAuthenticatingAs($username, $password);
     }
 
     /**
@@ -101,14 +115,7 @@ class WebApiContext implements ApiClientAwareContext
     {
         $url = $this->prepareUrl($url);
 
-        if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
-            $this->request = new Request($method, $url, $this->headers);
-        } else {
-            $this->request = $this->getClient()->createRequest($method, $url);
-            if (!empty($this->headers)) {
-                $this->request->addHeaders($this->headers);
-            }
-        }
+        $this->request = new Request($method, $url, $this->headers);
 
         $this->sendRequest();
     }
@@ -132,17 +139,10 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+            'body' => json_encode($fields),
         );
 
-        if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
-            $this->request = new Request($method, $url, $this->headers, $bodyOption['body']);
-        } else {
-            $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
-            if (!empty($this->headers)) {
-                $this->request->addHeaders($this->headers);
-            }
-        }
+        $this->request = new Request($method, $url, $this->headers, $bodyOption['body']);
 
         $this->sendRequest();
     }
@@ -161,18 +161,7 @@ class WebApiContext implements ApiClientAwareContext
         $url = $this->prepareUrl($url);
         $string = $this->replacePlaceHolder(trim($string));
 
-        if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
-            $this->request = new Request($method, $url, $this->headers, $string);
-        } else {
-            $this->request = $this->getClient()->createRequest(
-                $method,
-                $url,
-                array(
-                    'headers' => $this->getHeaders(),
-                    'body' => $string,
-                )
-            );
-        }
+        $this->request = new Request($method, $url, $this->headers, $string);
 
         $this->sendRequest();
     }
@@ -194,16 +183,7 @@ class WebApiContext implements ApiClientAwareContext
         $fields = array();
         parse_str(implode('&', explode("\n", $body)), $fields);
 
-        if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
-            $this->request = new Request($method, $url, ['Content-Type' => 'application/x-www-form-urlencoded'], http_build_query($fields, null, '&'));
-        } else {
-            $this->request = $this->getClient()->createRequest($method, $url);
-            /** @var \GuzzleHttp\Post\PostBodyInterface $requestBody */
-            $requestBody = $this->request->getBody();
-            foreach ($fields as $key => $value) {
-                $requestBody->setField($key, $value);
-            }
-        }
+        $this->request = new Request($method, $url, ['Content-Type' => 'application/x-www-form-urlencoded'], http_build_query($fields, null, '&'));
 
         $this->sendRequest();
     }
@@ -268,13 +248,13 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
         if (null === $actual) {
             throw new \RuntimeException(
-              "Can not convert actual to json:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
+                "Can not convert actual to json:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
             );
         }
 
@@ -305,18 +285,6 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
-     * Prepare URL by replacing placeholders and trimming slashes.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    private function prepareUrl($url)
-    {
-        return ltrim($this->replacePlaceHolder($url), '/');
-    }
-
-    /**
      * Sets place holder for replacement.
      *
      * you can specify placeholders, which will
@@ -325,7 +293,7 @@ class WebApiContext implements ApiClientAwareContext
      * @param string $key   token name
      * @param string $value replace value
      */
-    public function setPlaceHolder($key, $value)
+    protected function setPlaceHolder($key, $value)
     {
         $this->placeHolders[$key] = $value;
     }
@@ -344,6 +312,14 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         return $string;
+    }
+
+    /**
+     * Get Response
+     */
+    protected function getResponse()
+    {
+        return $this->response;
     }
 
     /**
@@ -408,4 +384,17 @@ class WebApiContext implements ApiClientAwareContext
 
         return $this->client;
     }
+
+    /**
+     * Prepare URL by replacing placeholders and trimming slashes.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    private function prepareUrl($url)
+    {
+        return ltrim($this->replacePlaceHolder($url), '/');
+    }
+
 }
