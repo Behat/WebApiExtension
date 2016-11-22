@@ -131,7 +131,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequestToPath($method, $path, TableNode $table = null)
     {
         $url     = $this->getUrlFromPath($path, $method);
-        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? $table->getRowsHash() : null);
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? json_encode($table->getRowsHash()) : null);
         $this->send($request);
     }
 
@@ -158,7 +158,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function iSendARequestWithField($method, $path, $field, TableNode $table = null)
     {
         $url     = $this->getUrlFromPath($path, $method);
-        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? [$field => $table->getRowsHash()] : null);
+        $request = new GuzzleRequest($method, $url, $this->getHeadersBag()->all(), null !== $table ? json_encode([$field => $table->getRowsHash()]) : null);
         $this->send($request);
     }
 
@@ -180,7 +180,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function theResponseHeaderShouldBe($header, $value)
     {
         Assertions::assertTrue($this->response->hasHeader($header));
-        Assertions::assertEquals($value, $this->response->getHeader($header));
+        Assertions::assertEquals($value, $this->response->getHeader($header)[0]);
     }
 
     /**
@@ -191,7 +191,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
     public function theResponseHeaderLocationShouldContainsPath($path)
     {
         Assertions::assertTrue($this->response->hasHeader('location'));
-        Assertions::assertContains($path, $this->response->getHeader('location'));
+        Assertions::assertContains($path, $this->response->getHeader('location')[0]);
     }
 
     /**
@@ -265,7 +265,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
 
     private function initializeHeaders()
     {
-        $this->headers = new HeaderBag(["Accept" => "application/json"]);
+        $this->headers = new HeaderBag(["Accept" => "application/json", 'Content-Type' => 'application/json']);
     }
 
     /**
