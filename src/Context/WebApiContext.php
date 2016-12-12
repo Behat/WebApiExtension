@@ -13,6 +13,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit_Framework_Assert as Assertions;
@@ -268,11 +269,6 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
         $this->headers = new HeaderBag(["Accept" => "application/json", 'Content-Type' => 'application/json']);
     }
 
-    /**
-     * Sends a request with error handling
-     *
-     * @param RequestInterface $request
-     */
     protected function send(RequestInterface $request)
     {
         try {
@@ -287,6 +283,8 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
             if (null === $this->response) {
                 throw $e;
             }
+        } catch (ServerException $e) {
+            throw new \Exception((string) $e->getResponse()->getBody());
         }
     }
 }
