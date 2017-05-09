@@ -27,7 +27,7 @@
         "behat/behat": "~3.0",
         "behat/symfony2-extension": "~2.0",
         "guzzlehttp/guzzle": "^6.2",
-        "phpunit/phpunit": "~5.0"
+        "phpunit/phpunit": "^6.1"
     },
     "require-dev": {
         "symfony/process": "~2.1",
