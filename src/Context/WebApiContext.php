@@ -16,7 +16,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use PHPUnit_Framework_Assert as Assertions;
+use PHPUnit\Framework\Assert as Assertions;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
