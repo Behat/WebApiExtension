@@ -29,34 +29,17 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
  */
 class WebApiContext extends RouterContext implements ApiClientAwareContextInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $jsonResponse;
-
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     protected $client;
-
-    /**
-     * @var ResponseInterface
-     */
+    /** @var ResponseInterface */
     protected $response;
-
-    /**
-     * @var HeaderBag
-     */
+    /** @var HeaderBag */
     protected $headers;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $responseContent;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
@@ -170,7 +153,7 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function theResponseCodeShouldBe($code)
     {
-        Assertions::assertSame(intval($this->response->getStatusCode()), intval($code));
+        Assertions::assertSame(intval($this->response->getStatusCode()), intval($code), is_string($this->jsonResponse) ? $this->jsonResponse : json_encode($this->jsonResponse, JSON_PRETTY_PRINT));
     }
 
     /**
@@ -239,7 +222,9 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
         $actual   = $this->jsonResponse;
         $expected = json_decode($jsonString, true);
 
-        Assertions::assertEquals($expected, $actual);
+        Assertions::assertEquals($expected, $actual, is_string($this->jsonResponse)
+            ? $this->jsonResponse // json_encode(json_decode($this->jsonResponse, true), JSON_PRETTY_PRINT)
+            : json_encode($this->jsonResponse, JSON_PRETTY_PRINT));
     }
 
     /**
@@ -278,11 +263,12 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
             }
         } catch (ClientException $e) {
             $this->response = $e->getResponse();
-            //when 404 or 401 or 403 or something else
-            $this->jsonResponse = $this->response->getBody()->getContents();
             if (null === $this->response) {
                 throw $e;
             }
+            //when 404 or 401 or 403 or something else
+            $json = json_decode((string)$this->response->getBody(), true);
+            $this->jsonResponse = json_last_error() === JSON_ERROR_NONE ? $json : (string)$this->response->getBody();
         } catch (ServerException $e) {
             throw new \Exception((string) $e->getResponse()->getBody());
         }
