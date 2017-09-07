@@ -219,10 +219,10 @@ class WebApiContext extends RouterContext implements ApiClientAwareContextInterf
      */
     public function theResponseShouldBeEqualJson(PyStringNode $jsonString)
     {
-        $actual   = $this->jsonResponse;
-        $expected = json_decode($jsonString, true);
+        $actual   = json_encode($this->jsonResponse);
+        $expected = json_encode(json_decode($jsonString, true));
 
-        Assertions::assertEquals($expected, $actual, is_string($this->jsonResponse)
+        Assertions::assertJsonStringEqualsJsonString($expected, $actual, is_string($this->jsonResponse)
             ? $this->jsonResponse // json_encode(json_decode($this->jsonResponse, true), JSON_PRETTY_PRINT)
             : json_encode($this->jsonResponse, JSON_PRETTY_PRINT));
     }
