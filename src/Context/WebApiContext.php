@@ -380,7 +380,7 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @param string $headerName
      */
-    protected function removeHeader($headerName)
+    public function removeHeader($headerName)
     {
         if (array_key_exists($headerName, $this->headers)) {
             unset($this->headers[$headerName]);
