@@ -15,6 +15,7 @@ use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\Assert;
 use PHPUnit_Framework_Assert as Assertions;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -219,7 +220,11 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expected = intval($code);
         $actual = intval($this->response->getStatusCode());
-        Assertions::assertSame($expected, $actual);
+        if (class_exists(Assert::class)) {
+            Assert::assertSame($expected, $actual);
+        } else {
+            Assertions::assertSame($expected, $actual);
+        }
     }
 
     /**
@@ -233,7 +238,11 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/i';
         $actual = (string) $this->response->getBody();
-        Assertions::assertRegExp($expectedRegexp, $actual);
+        if (class_exists(Assert::class)) {
+            Assert::assertRegExp($expectedRegexp, $actual);
+        } else {
+            Assertions::assertRegExp($expectedRegexp, $actual);
+        }
     }
 
     /**
@@ -247,7 +256,11 @@ class WebApiContext implements ApiClientAwareContext
     {
         $expectedRegexp = '/' . preg_quote($text) . '/';
         $actual = (string) $this->response->getBody();
-        Assertions::assertNotRegExp($expectedRegexp, $actual);
+        if (class_exists(Assert::class)) {
+            Assert::assertNotRegExp($expectedRegexp, $actual);
+        } else {
+            Assertions::assertNotRegExp($expectedRegexp, $actual);
+        }
     }
 
     /**
@@ -278,10 +291,18 @@ class WebApiContext implements ApiClientAwareContext
             );
         }
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
+        if (class_exists(Assert::class)) {
+            Assert::assertGreaterThanOrEqual(count($etalon), count($actual));
+            foreach ($etalon as $key => $needle) {
+                Assert::assertArrayHasKey($key, $actual);
+                Assert::assertEquals($etalon[$key], $actual[$key]);
+            }
+        } else {
+            Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
+            foreach ($etalon as $key => $needle) {
+                Assertions::assertArrayHasKey($key, $actual);
+                Assertions::assertEquals($etalon[$key], $actual[$key]);
+            }
         }
     }
 

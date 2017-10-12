@@ -20,7 +20,7 @@
         "php": ">=5.6",
         "behat/behat": "~3.0",
         "guzzlehttp/guzzle": "4 - 6",
-        "phpunit/phpunit": "4 - 5"
+        "phpunit/phpunit": "4 - 6"
     },
 
     "require-dev": {
