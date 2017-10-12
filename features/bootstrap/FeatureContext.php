@@ -44,7 +44,7 @@ class FeatureContext implements SnippetAcceptingContext
     public function prepareScenario()
     {
         $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
-            md5(microtime() * rand(0, 10000));
+            md5(uniqid(rand(0, 10000)));
 
         mkdir($dir . '/features/bootstrap', 0777, true);
 
