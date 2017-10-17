@@ -223,6 +223,19 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Checks that the response has specific header key/value
+     *
+     * @param string $key header key
+     * @param string $value header value
+     *
+     * @Then the response header :key should be :value
+     */
+    public function theResponseHeaderShouldBe($key, $value)
+    {
+        Assertions::assertSame($value, $this->response->getHeader($key)[0]);
+    }
+
+    /**
      * Checks that response body contains specific text.
      *
      * @param string $text
