@@ -2,6 +2,7 @@
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -44,7 +45,7 @@ class FeatureContext implements SnippetAcceptingContext
     public function prepareScenario()
     {
         $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
-            md5(microtime() * rand(0, 10000));
+            md5(uniqid(rand(0, 10000)));
 
         mkdir($dir . '/features/bootstrap', 0777, true);
 
@@ -119,7 +120,11 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function theOutputShouldContain(PyStringNode $text)
     {
-        PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        if (class_exists(Assert::class)) {
+            Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        } else {
+            PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        }
     }
 
     private function getExpectedOutput(PyStringNode $expectedText)
@@ -162,13 +167,21 @@ class FeatureContext implements SnippetAcceptingContext
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertNotEquals(0, $this->getExitCode());
+            if (class_exists(Assert::class)) {
+                Assert::assertNotEquals(0, $this->getExitCode());
+            } else {
+                PHPUnit_Framework_Assert::assertNotEquals(0, $this->getExitCode());
+            }
         } else {
             if (0 !== $this->getExitCode()) {
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertEquals(0, $this->getExitCode());
+            if (class_exists(Assert::class)) {
+                Assert::assertEquals(0, $this->getExitCode());
+            } else {
+                PHPUnit_Framework_Assert::assertEquals(0, $this->getExitCode());
+            }
         }
     }
 

@@ -34,7 +34,7 @@ http {
         root $TRAVIS_BUILD_DIR/testapp;
 
         location / {
-            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_pass 127.0.0.1:9001;
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME \$document_root/index.php;
             include /etc/nginx/fastcgi_params;
@@ -43,7 +43,7 @@ http {
 }
 CONF
     echo "    Starting the HHVM daemon"
-    hhvm --mode server -vServer.Type=fastcgi -vServer.IP='127.0.0.1' -vServer.Port=9000 > "$TRAVIS_BUILD_DIR/server.log" 2>&1 &
+    hhvm --mode server -vServer.Type=fastcgi -vServer.IP='127.0.0.1' -vServer.Port=9001 > "$TRAVIS_BUILD_DIR/server.log" 2>&1 &
     echo "    Starting nginx"
     sudo mkdir -p /var/log/nginx/
     sudo nginx -c "$TRAVIS_BUILD_DIR/.nginx.conf"
