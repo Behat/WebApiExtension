@@ -305,6 +305,18 @@ class WebApiContext implements ApiClientAwareContext
     }
 
     /**
+     * Returns the response as a string.
+     *
+     * @return string
+     */
+    public function getResponseAsString()
+    {
+        if ($this->response) {
+            return (string) $this->response->getBody();
+        }
+    }
+
+    /**
      * Prepare URL by replacing placeholders and trimming slashes.
      *
      * @param string $url
