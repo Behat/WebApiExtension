@@ -1,8 +1,9 @@
 <?php
 
 /*
- * This file is part of the Behat WebApiExtension.
- * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * This file is part of the Keyclic WebApiExtension.
+ *
+ * (c) Keyclic team <techies@keyclic.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,55 +13,19 @@ namespace Behat\WebApiExtension\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Request;
-use PHPUnit_Framework_Assert as Assertions;
+use GuzzleHttp\Exception\GuzzleException;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides web API description definitions.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ * @author Kevin Lot <klot@keyclic.com>
+ * @author Keyclic team <techies@keyclic.com>
  */
-class WebApiContext implements ApiClientAwareContext
+class WebApiContext extends ApiClientContext implements ApiClientContextInterface
 {
-    /**
-     * @var string
-     */
-    private $authorization;
-
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * @var array
-     */
-    private $headers = array();
-
-    /**
-     * @var RequestInterface
-     */
-    private $request;
-
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
-
-    private $placeHolders = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setClient(ClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * Adds Basic Authentication header to next request.
      *
@@ -71,9 +36,10 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function iAmBasicAuthenticatingAs($username, $password)
     {
+        $authorization = base64_encode($username . ':' . $password);
+
         $this->removeHeader('Authorization');
-        $this->authorization = base64_encode($username . ':' . $password);
-        $this->addHeader('Authorization', 'Basic ' . $this->authorization);
+        $this->addHeader('Authorization', 'Basic ' . $authorization);
     }
 
     /**
@@ -109,15 +75,15 @@ class WebApiContext implements ApiClientAwareContext
      * @param string $method request method
      * @param string $url    relative url
      *
+     * @throws GuzzleException
+     *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
      */
     public function iSendARequest($method, $url)
     {
         $url = $this->prepareUrl($url);
 
-        $this->request = new Request($method, $url, $this->headers);
-
-        $this->sendRequest();
+        $this->sendRequest($method, $url, $this->getHeaders());
     }
 
     /**
@@ -125,26 +91,23 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @param string    $method request method
      * @param string    $url    relative url
-     * @param TableNode $post   table of post values
+     * @param TableNode $values table of post values
+     *
+     * @throws GuzzleException
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with values:$/
      */
-    public function iSendARequestWithValues($method, $url, TableNode $post)
+    public function iSendARequestWithValues($method, $url, TableNode $values)
     {
         $url = $this->prepareUrl($url);
-        $fields = array();
 
-        foreach ($post->getRowsHash() as $key => $val) {
-            $fields[$key] = $this->replacePlaceHolder($val);
-        }
+        $body = array_map(function ($value) {
+            return $this->replacePlaceHolder($value);
+        }, $values->getRowsHash());
 
-        $bodyOption = array(
-            'body' => json_encode($fields),
-        );
+        $body = json_encode($body);
 
-        $this->request = new Request($method, $url, $this->headers, $bodyOption['body']);
-
-        $this->sendRequest();
+        $this->sendRequest($method, $url, $this->getHeaders(), $body);
     }
 
     /**
@@ -152,26 +115,28 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @param string       $method request method
      * @param string       $url    relative url
-     * @param PyStringNode $string request body
+     * @param PyStringNode $body   request body
+     *
+     * @throws GuzzleException
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
      */
-    public function iSendARequestWithBody($method, $url, PyStringNode $string)
+    public function iSendARequestWithBody($method, $url, PyStringNode $body)
     {
         $url = $this->prepareUrl($url);
-        $string = $this->replacePlaceHolder(trim($string));
+        $body = $this->replacePlaceHolder(trim($body));
 
-        $this->request = new Request($method, $url, $this->headers, $string);
-
-        $this->sendRequest();
+        $this->sendRequest($method, $url, $this->getHeaders(), $body);
     }
 
     /**
      * Sends HTTP request to specific URL with form data from PyString.
      *
-     * @param string       $method request method
-     * @param string       $url    relative url
-     * @param PyStringNode $body   request body
+     * @param string $method request method
+     * @param string $url relative url
+     * @param PyStringNode $body request body
+     *
+     * @throws GuzzleException
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with form data:$/
      */
@@ -180,12 +145,13 @@ class WebApiContext implements ApiClientAwareContext
         $url = $this->prepareUrl($url);
         $body = $this->replacePlaceHolder(trim($body));
 
-        $fields = array();
+        $fields = [];
         parse_str(implode('&', explode("\n", $body)), $fields);
+        $body = http_build_query($fields, null, '&');
 
-        $this->request = new Request($method, $url, ['Content-Type' => 'application/x-www-form-urlencoded'], http_build_query($fields, null, '&'));
+        $this->addHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-        $this->sendRequest();
+        $this->sendRequest($method, $url, $this->getHeaders(), $body);
     }
 
     /**
@@ -198,8 +164,9 @@ class WebApiContext implements ApiClientAwareContext
     public function theResponseCodeShouldBe($code)
     {
         $expected = intval($code);
-        $actual = intval($this->response->getStatusCode());
-        Assertions::assertSame($expected, $actual);
+        $statusCode = intval($this->getResponse()->getStatusCode());
+
+        Assert::assertSame($expected, $statusCode);
     }
 
     /**
@@ -212,8 +179,9 @@ class WebApiContext implements ApiClientAwareContext
     public function theResponseShouldContain($text)
     {
         $expectedRegexp = '/' . preg_quote($text) . '/i';
-        $actual = (string) $this->response->getBody();
-        Assertions::assertRegExp($expectedRegexp, $actual);
+        $bodyResponse = (string) $this->getResponse()->getBody();
+
+        Assert::assertRegExp($expectedRegexp, $bodyResponse);
     }
 
     /**
@@ -226,8 +194,9 @@ class WebApiContext implements ApiClientAwareContext
     public function theResponseShouldNotContain($text)
     {
         $expectedRegexp = '/' . preg_quote($text) . '/';
-        $actual = (string) $this->response->getBody();
-        Assertions::assertNotRegExp($expectedRegexp, $actual);
+        $bodyResponse = (string) $this->getResponse()->getBody();
+
+        Assert::assertNotRegExp($expectedRegexp, $bodyResponse);
     }
 
     /**
@@ -243,26 +212,34 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function theResponseShouldContainJson(PyStringNode $jsonString)
     {
-        $etalon = json_decode($this->replacePlaceHolder($jsonString->getRaw()), true);
-        $actual = json_decode($this->response->getBody(), true);
+        $rawJsonString = $this->replacePlaceHolder($jsonString->getRaw());
 
-        if (null === $etalon) {
-            throw new \RuntimeException(
-                "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
-            );
-        }
+        $expected = json_decode($rawJsonString, true);
+        $actual = json_decode((string) $this->getResponse()->getBody(), true);
 
-        if (null === $actual) {
-            throw new \RuntimeException(
-                "Can not convert actual to json:\n" . $this->replacePlaceHolder((string) $this->response->getBody())
-            );
-        }
+        Assert::assertNotNull($expected, 'Can not convert expected to json:\n' . $rawJsonString);
+        Assert::assertNotNull($actual, 'Can not convert body response to json:\n' . $this->getResponse()->getBody());
 
-        Assertions::assertGreaterThanOrEqual(count($etalon), count($actual));
-        foreach ($etalon as $key => $needle) {
-            Assertions::assertArrayHasKey($key, $actual);
-            Assertions::assertEquals($etalon[$key], $actual[$key]);
+        Assert::assertGreaterThanOrEqual(count($expected), count($actual));
+
+        foreach ($expected as $key => $needle) {
+            Assert::assertArrayHasKey($key, $actual);
+            Assert::assertEquals($expected[$key], $actual[$key]);
         }
+    }
+
+    /**
+     * Check if the response header has a specific value.
+    *
+     * @param string $name
+     * @param string $expected
+     *
+     * @Then /^the response "([^"]*)" header should be "([^"]*)"$/
+     */
+    public function theResponseHeaderShouldBe($name, $expected)
+    {
+        $actual = $this->getResponse()->getHeaderLine($name);
+        Assert::assertEquals($expected, $actual);
     }
 
     /**
@@ -272,129 +249,21 @@ class WebApiContext implements ApiClientAwareContext
      */
     public function printResponse()
     {
-        $request = $this->request;
-        $response = $this->response;
+        $request = '';
+        if ($this->getRequest() instanceof RequestInterface) {
+            $request = sprintf(
+                '%s %s',
+                $this->getRequest()->getMethod(),
+                (string) $this->getRequest()->getUri()
+            );
+        }
 
-        echo sprintf(
-            "%s %s => %d:\n%s",
-            $request->getMethod(),
-            (string) ($request instanceof RequestInterface ? $request->getUri() : $request->getUrl()),
-            $response->getStatusCode(),
-            (string) $response->getBody()
+        $response = sprintf(
+            "%d:\n%s",
+            $this->getResponse()->getStatusCode(),
+            (string) $this->getResponse()->getBody()
         );
+
+        echo sprintf('%s => %s', $request, $response);
     }
-
-    /**
-     * Sets place holder for replacement.
-     *
-     * you can specify placeholders, which will
-     * be replaced in URL, request or response body.
-     *
-     * @param string $key   token name
-     * @param string $value replace value
-     */
-    protected function setPlaceHolder($key, $value)
-    {
-        $this->placeHolders[$key] = $value;
-    }
-
-    /**
-     * Replaces placeholders in provided text.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    protected function replacePlaceHolder($string)
-    {
-        foreach ($this->placeHolders as $key => $val) {
-            $string = str_replace($key, $val, $string);
-        }
-
-        return $string;
-    }
-
-    /**
-     * Get Response
-     */
-    protected function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Returns headers, that will be used to send requests.
-     *
-     * @return array
-     */
-    protected function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * Adds header
-     *
-     * @param string $name
-     * @param string $value
-     */
-    protected function addHeader($name, $value)
-    {
-        if (isset($this->headers[$name])) {
-            if (!is_array($this->headers[$name])) {
-                $this->headers[$name] = array($this->headers[$name]);
-            }
-
-            $this->headers[$name][] = $value;
-        } else {
-            $this->headers[$name] = $value;
-        }
-    }
-
-    /**
-     * Removes a header identified by $headerName
-     *
-     * @param string $headerName
-     */
-    protected function removeHeader($headerName)
-    {
-        if (array_key_exists($headerName, $this->headers)) {
-            unset($this->headers[$headerName]);
-        }
-    }
-
-    private function sendRequest()
-    {
-        try {
-            $this->response = $this->getClient()->send($this->request);
-        } catch (RequestException $e) {
-            $this->response = $e->getResponse();
-
-            if (null === $this->response) {
-                throw $e;
-            }
-        }
-    }
-
-    private function getClient()
-    {
-        if (null === $this->client) {
-            throw new \RuntimeException('Client has not been set in WebApiContext');
-        }
-
-        return $this->client;
-    }
-
-    /**
-     * Prepare URL by replacing placeholders and trimming slashes.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    private function prepareUrl($url)
-    {
-        return ltrim($this->replacePlaceHolder($url), '/');
-    }
-
 }

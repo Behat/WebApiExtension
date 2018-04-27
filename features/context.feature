@@ -8,10 +8,11 @@ Feature: client aware context
       """
       <?php
 
-      use Behat\WebApiExtension\Context\ApiClientAwareContext;
+      use Behat\WebApiExtension\Context\ApiClientContextInterface;
+      use PHPUnit\Framework\Assert;
       use GuzzleHttp\ClientInterface;
 
-      class FeatureContext implements ApiClientAwareContext
+      class FeatureContext implements ApiClientContextInterface
       {
           private $client;
 
@@ -24,7 +25,7 @@ Feature: client aware context
            * @Then /^the client should be set$/
            */
           public function theClientShouldBeSet() {
-              PHPUnit_Framework_Assert::assertInstanceOf('GuzzleHttp\Client', $this->client);
+              Assert::assertInstanceOf(ClientInterface::class, $this->client);
           }
       }
       """
@@ -46,7 +47,7 @@ Feature: client aware context
         Scenario: client is set
           Then the client should be set
       """
-  When I run "behat -f progress features/client.feature"
+  When I run "behat -f progress features/client.feature --lang=en"
   Then it should pass with:
     """
     .

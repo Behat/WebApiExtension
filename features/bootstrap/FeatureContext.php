@@ -1,23 +1,26 @@
 <?php
 
-use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
  * Behat context class.
  */
-class FeatureContext implements SnippetAcceptingContext
+class FeatureContext implements Context
 {
     /**
      * @var string
      */
     private $phpBin;
+
     /**
      * @var Process
      */
     private $process;
+
     /**
      * @var string
      */
@@ -43,8 +46,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function prepareScenario()
     {
-        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
-            md5(microtime() * rand(0, 10000));
+        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR. (string) (microtime(true) * rand(0, 10000));
 
         mkdir($dir . '/features/bootstrap', 0777, true);
 
@@ -67,7 +69,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function aFileNamedWith($filename, PyStringNode $content)
     {
-        $content = strtr((string) $content, array("'''" => '"""'));
+        $content = strtr((string) $content, ['\'\'\'' => '"""']);
         $this->createFile($this->workingDir . '/' . $filename, $content);
     }
 
@@ -80,7 +82,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function iRunBehat($argumentsString = '')
     {
-        $argumentsString = strtr($argumentsString, array('\'' => '"'));
+        $argumentsString = strtr($argumentsString, ['\'' => '"']);
 
         $this->process->setWorkingDirectory($this->workingDir);
         $this->process->setCommandLine(
@@ -119,12 +121,17 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function theOutputShouldContain(PyStringNode $text)
     {
-        PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
     }
 
+    /**
+     * @param PyStringNode $expectedText
+     *
+     * @return null|string|string[]
+     */
     private function getExpectedOutput(PyStringNode $expectedText)
     {
-        $text = strtr($expectedText, array('\'\'\'' => '"""'));
+        $text = strtr($expectedText, ['\'\'\'' => '"""']);
 
         // windows path fix
         if ('/' !== DIRECTORY_SEPARATOR) {
@@ -162,21 +169,27 @@ class FeatureContext implements SnippetAcceptingContext
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertNotEquals(0, $this->getExitCode());
+            Assert::assertNotEquals(0, $this->getExitCode());
         } else {
             if (0 !== $this->getExitCode()) {
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertEquals(0, $this->getExitCode());
+            Assert::assertEquals(0, $this->getExitCode());
         }
     }
 
+    /**
+     * @return int|null
+     */
     private function getExitCode()
     {
         return $this->process->getExitCode();
     }
 
+    /**
+     * @return string
+     */
     private function getOutput()
     {
         $output = $this->process->getErrorOutput() . $this->process->getOutput();
@@ -189,16 +202,23 @@ class FeatureContext implements SnippetAcceptingContext
         return trim(preg_replace("/ +$/m", '', $output));
     }
 
+    /**
+     * @param string $filename
+     * @param string $content
+     */
     private function createFile($filename, $content)
     {
         $path = dirname($filename);
-        if (!is_dir($path)) {
+        if (is_dir($path) === false) {
             mkdir($path, 0777, true);
         }
 
         file_put_contents($filename, $content);
     }
 
+    /**
+     * @param string $path
+     */
     private static function clearDirectory($path)
     {
         $files = scandir($path);
@@ -207,11 +227,7 @@ class FeatureContext implements SnippetAcceptingContext
 
         foreach ($files as $file) {
             $file = $path . DIRECTORY_SEPARATOR . $file;
-            if (is_dir($file)) {
-                self::clearDirectory($file);
-            } else {
-                unlink($file);
-            }
+            is_dir($file) === true ? self::clearDirectory($file) : unlink($file);
         }
 
         rmdir($path);
