@@ -34,7 +34,7 @@ class FeatureContext implements Context
      */
     public static function cleanTestFolders()
     {
-        if (is_dir($dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api')) {
+        if (is_dir($dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api')) {
             self::clearDirectory($dir);
         }
     }
@@ -46,9 +46,9 @@ class FeatureContext implements Context
      */
     public function prepareScenario()
     {
-        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR. (string) (microtime(true) * rand(0, 10000));
+        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.(string) (microtime(true) * rand(0, 10000));
 
-        mkdir($dir . '/features/bootstrap', 0777, true);
+        mkdir($dir.'/features/bootstrap', 0777, true);
 
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
@@ -70,11 +70,11 @@ class FeatureContext implements Context
     public function aFileNamedWith($filename, PyStringNode $content)
     {
         $content = strtr((string) $content, ['\'\'\'' => '"""']);
-        $this->createFile($this->workingDir . '/' . $filename, $content);
+        $this->createFile($this->workingDir.'/'.$filename, $content);
     }
 
     /**
-     * Runs behat command with provided parameters
+     * Runs behat command with provided parameters.
      *
      * @When /^I run "behat(?: ((?:\"|[^"])*))?"$/
      *
@@ -91,7 +91,7 @@ class FeatureContext implements Context
                 $this->phpBin,
                 escapeshellarg(BEHAT_BIN_PATH),
                 $argumentsString,
-                strtr('--format-settings=\'{"timer": false}\' --no-colors', array('\'' => '"', '"' => '\"'))
+                strtr('--format-settings=\'{"timer": false}\' --no-colors', ['\'' => '"', '"' => '\"'])
             )
         );
         $this->process->start();
@@ -166,13 +166,13 @@ class FeatureContext implements Context
     {
         if ('fail' === $success) {
             if (0 === $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
             Assert::assertNotEquals(0, $this->getExitCode());
         } else {
             if (0 !== $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
             Assert::assertEquals(0, $this->getExitCode());
@@ -192,14 +192,14 @@ class FeatureContext implements Context
      */
     private function getOutput()
     {
-        $output = $this->process->getErrorOutput() . $this->process->getOutput();
+        $output = $this->process->getErrorOutput().$this->process->getOutput();
 
         // Normalize the line endings in the output
         if ("\n" !== PHP_EOL) {
             $output = str_replace(PHP_EOL, "\n", $output);
         }
 
-        return trim(preg_replace("/ +$/m", '', $output));
+        return trim(preg_replace('/ +$/m', '', $output));
     }
 
     /**
@@ -209,7 +209,7 @@ class FeatureContext implements Context
     private function createFile($filename, $content)
     {
         $path = dirname($filename);
-        if (is_dir($path) === false) {
+        if (false === is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
@@ -226,8 +226,8 @@ class FeatureContext implements Context
         array_shift($files);
 
         foreach ($files as $file) {
-            $file = $path . DIRECTORY_SEPARATOR . $file;
-            is_dir($file) === true ? self::clearDirectory($file) : unlink($file);
+            $file = $path.DIRECTORY_SEPARATOR.$file;
+            true === is_dir($file) ? self::clearDirectory($file) : unlink($file);
         }
 
         rmdir($path);

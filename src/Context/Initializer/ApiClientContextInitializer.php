@@ -47,8 +47,8 @@ class ApiClientContextInitializer implements ContextInitializer
      */
     public function initializeContext(Context $context)
     {
-        if ($context instanceof ApiClientContextInterface === true) {
-            /** @var $context ApiClientContextInterface */
+        if (true === $context instanceof ApiClientContextInterface) {
+            /* @var $context ApiClientContextInterface */
             $context->setClient($this->client);
         }
     }

@@ -26,9 +26,7 @@ interface ApiClientContextInterface extends Context
     /**
      * Sets Guzzle Client instance.
      *
-     * @param ClientInterface $client Guzzle Client instance.
-     *
-     * @return void
+     * @param ClientInterface $client guzzle Client instance
      */
     public function setClient(ClientInterface $client);
 }

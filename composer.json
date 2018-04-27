@@ -24,7 +24,6 @@
         "phpunit/phpunit": "^6.5"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "@stable",
         "symfony/console": "^4.0",
         "symfony/dotenv": "^4.0",
         "symfony/flex": "^1.0",

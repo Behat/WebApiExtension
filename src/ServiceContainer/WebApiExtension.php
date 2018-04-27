@@ -14,8 +14,8 @@ namespace Behat\WebApiExtension\ServiceContainer;
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
+use Behat\WebApiExtension\Context\Initializer\ApiClientContextInitializer;
 use GuzzleHttp\Client;
-use Keyclic\WebApiExtension\Context\Initializer\ApiClientContextInitializer;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -78,13 +78,13 @@ class WebApiExtension implements ExtensionInterface
 
     /**
      * @param ContainerBuilder $container
-     * @param array $config
+     * @param array            $config
      */
     private function loadClient(ContainerBuilder $container, array $config)
     {
         $definition = new Definition(Client::class, [[
             'base_uri' => $config['base_uri'],
-            'verify'   => $config['verify'],
+            'verify' => $config['verify'],
         ]]);
 
         $container->setDefinition(self::CLIENT_ID, $definition);
@@ -92,7 +92,7 @@ class WebApiExtension implements ExtensionInterface
 
     /**
      * @param ContainerBuilder $container
-     * @param array $config
+     * @param array            $config
      */
     private function loadContextInitializer(ContainerBuilder $container, array $config)
     {

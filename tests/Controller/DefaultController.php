@@ -22,49 +22,51 @@ class DefaultController
      *
      * @return JsonResponse
      */
-    public function echo(Request $request) {
-       $return = [
+    public function echo(Request $request)
+    {
+        $return = [
            'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
            'method' => $request->getMethod(),
        ];
 
-       // Forms should be read from request, other data straight from input.
-       $requestData = $request->request->all();
-       $return = array_merge(
+        // Forms should be read from request, other data straight from input.
+        $requestData = $request->request->all();
+        $return = array_merge(
            $return,
            $requestData
        );
 
-       /** @var string $content */
-       $content = $request->getContent(false);
-       if (empty($content) === false) {
-           $data = json_decode($content, true);
+        /** @var string $content */
+        $content = $request->getContent(false);
+        if (false === empty($content)) {
+            $data = json_decode($content, true);
 
-           if (is_array($data) === false) {
-               $data['content'] = $data;
-           }
+            if (false === is_array($data)) {
+                $data['content'] = $data;
+            }
 
-           $return = array_merge(
+            $return = array_merge(
                $return,
                $data
            );
-       }
+        }
 
-       $return['headers'] = $request->headers->all();
-       $return['query'] = $request->query->all();
+        $return['headers'] = $request->headers->all();
+        $return['query'] = $request->query->all();
 
-       return new JsonResponse($return);
-   }
+        return new JsonResponse($return);
+    }
 
     /**
      * @param Request $request
      *
      * @return JsonResponse
      */
-   public function error(Request $request) {
+    public function error(Request $request)
+    {
         $response = $this->echo($request);
         $response->setStatusCode(Response::HTTP_NOT_FOUND);
 
         return $response;
-   }
+    }
 }

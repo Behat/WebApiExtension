@@ -2,11 +2,6 @@ language: php
 
 php:
   - 7.1
-  - hhvm
-
-before_install:
-  # start a web server on port 8080, running in the background
-  - bin/start_server.sh
 
 before_script:
   - composer self-update
@@ -15,6 +10,8 @@ before_script:
   - export PATH=vendor/bin:$PATH
 
 script:
+  # start a web server on port 8080, running in the background
+  - bin/console server:start
   - vendor/bin/behat -fprogress --strict --lang=en
 
 after_failure:

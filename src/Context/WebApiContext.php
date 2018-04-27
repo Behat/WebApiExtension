@@ -36,10 +36,10 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      */
     public function iAmBasicAuthenticatingAs($username, $password)
     {
-        $authorization = base64_encode($username . ':' . $password);
+        $authorization = base64_encode($username.':'.$password);
 
         $this->removeHeader('Authorization');
-        $this->addHeader('Authorization', 'Basic ' . $authorization);
+        $this->addHeader('Authorization', 'Basic '.$authorization);
     }
 
     /**
@@ -49,6 +49,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * @param string $password
      *
      * @Given /^I am authenticating as "([^"]*)" with "([^"]*)" password$/
+     *
      * @deprecated
      */
     public function iAmAuthenticatingAs($username, $password)
@@ -132,9 +133,9 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with form data from PyString.
      *
-     * @param string $method request method
-     * @param string $url relative url
-     * @param PyStringNode $body request body
+     * @param string       $method request method
+     * @param string       $url    relative url
+     * @param PyStringNode $body   request body
      *
      * @throws GuzzleException
      *
@@ -178,7 +179,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      */
     public function theResponseShouldContain($text)
     {
-        $expectedRegexp = '/' . preg_quote($text) . '/i';
+        $expectedRegexp = '/'.preg_quote($text).'/i';
         $bodyResponse = (string) $this->getResponse()->getBody();
 
         Assert::assertRegExp($expectedRegexp, $bodyResponse);
@@ -193,7 +194,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      */
     public function theResponseShouldNotContain($text)
     {
-        $expectedRegexp = '/' . preg_quote($text) . '/';
+        $expectedRegexp = '/'.preg_quote($text).'/';
         $bodyResponse = (string) $this->getResponse()->getBody();
 
         Assert::assertNotRegExp($expectedRegexp, $bodyResponse);
@@ -217,8 +218,8 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
         $expected = json_decode($rawJsonString, true);
         $actual = json_decode((string) $this->getResponse()->getBody(), true);
 
-        Assert::assertNotNull($expected, 'Can not convert expected to json:\n' . $rawJsonString);
-        Assert::assertNotNull($actual, 'Can not convert body response to json:\n' . $this->getResponse()->getBody());
+        Assert::assertNotNull($expected, 'Can not convert expected to json:\n'.$rawJsonString);
+        Assert::assertNotNull($actual, 'Can not convert body response to json:\n'.$this->getResponse()->getBody());
 
         Assert::assertGreaterThanOrEqual(count($expected), count($actual));
 
@@ -230,7 +231,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
 
     /**
      * Check if the response header has a specific value.
-    *
+     *
      * @param string $name
      * @param string $expected
      *

@@ -74,12 +74,13 @@ abstract class ApiClientContext implements ApiClientContextInterface
     /**
      * @return array
      */
-    public function  getHeaders() {
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
-     * Adds header
+     * Adds header.
      *
      * @param string $name
      * @param string $value
@@ -89,14 +90,14 @@ abstract class ApiClientContext implements ApiClientContextInterface
     public function addHeader($name, $value)
     {
         if (isset($this->headers[$name])
-            && is_array($this->headers[$name]) === true) {
+            && true === is_array($this->headers[$name])) {
             array_push($this->headers[$name], $value);
 
             return $this;
         }
 
         if (isset($this->headers[$name])
-            && is_array($this->headers[$name]) === false) {
+            && false === is_array($this->headers[$name])) {
             $this->headers[$name] = [
                 $this->headers[$name],
                 $value,
@@ -136,6 +137,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
      * @param string $value replace value
      *
      * @return ApiClientContext
+     *
      * @deprecated
      */
     public function setPlaceHolder($key, $value)
@@ -162,7 +164,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
     }
 
     /**
-     * Removes a placeholder identified by $key
+     * Removes a placeholder identified by $key.
      *
      * @param string $key token name
      *
@@ -180,21 +182,23 @@ abstract class ApiClientContext implements ApiClientContextInterface
     /**
      * @return RequestInterface
      */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
     /**
      * @return ResponseInterface
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
     /**
-     * @param string $method
-     * @param string $url
-     * @param array $headers
+     * @param string      $method
+     * @param string      $url
+     * @param array       $headers
      * @param string|null $body
      *
      * @throws GuzzleException
