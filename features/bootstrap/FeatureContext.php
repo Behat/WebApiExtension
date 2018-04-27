@@ -1,23 +1,26 @@
 <?php
 
-use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
  * Behat context class.
  */
-class FeatureContext implements SnippetAcceptingContext
+class FeatureContext implements Context
 {
     /**
      * @var string
      */
     private $phpBin;
+
     /**
      * @var Process
      */
     private $process;
+
     /**
      * @var string
      */
@@ -31,7 +34,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public static function cleanTestFolders()
     {
-        if (is_dir($dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api')) {
+        if (is_dir($dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api')) {
             self::clearDirectory($dir);
         }
     }
@@ -43,10 +46,9 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function prepareScenario()
     {
-        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'behat-web-api' . DIRECTORY_SEPARATOR .
-            md5(microtime() * rand(0, 10000));
+        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.(string) (microtime(true) * rand(0, 10000));
 
-        mkdir($dir . '/features/bootstrap', 0777, true);
+        mkdir($dir.'/features/bootstrap', 0777, true);
 
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
@@ -67,12 +69,12 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function aFileNamedWith($filename, PyStringNode $content)
     {
-        $content = strtr((string) $content, array("'''" => '"""'));
-        $this->createFile($this->workingDir . '/' . $filename, $content);
+        $content = strtr((string) $content, ['\'\'\'' => '"""']);
+        $this->createFile($this->workingDir.'/'.$filename, $content);
     }
 
     /**
-     * Runs behat command with provided parameters
+     * Runs behat command with provided parameters.
      *
      * @When /^I run "behat(?: ((?:\"|[^"])*))?"$/
      *
@@ -80,7 +82,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function iRunBehat($argumentsString = '')
     {
-        $argumentsString = strtr($argumentsString, array('\'' => '"'));
+        $argumentsString = strtr($argumentsString, ['\'' => '"']);
 
         $this->process->setWorkingDirectory($this->workingDir);
         $this->process->setCommandLine(
@@ -89,7 +91,7 @@ class FeatureContext implements SnippetAcceptingContext
                 $this->phpBin,
                 escapeshellarg(BEHAT_BIN_PATH),
                 $argumentsString,
-                strtr('--format-settings=\'{"timer": false}\' --no-colors', array('\'' => '"', '"' => '\"'))
+                strtr('--format-settings=\'{"timer": false}\' --no-colors', ['\'' => '"', '"' => '\"'])
             )
         );
         $this->process->start();
@@ -119,12 +121,17 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function theOutputShouldContain(PyStringNode $text)
     {
-        PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
     }
 
+    /**
+     * @param PyStringNode $expectedText
+     *
+     * @return null|string|string[]
+     */
     private function getExpectedOutput(PyStringNode $expectedText)
     {
-        $text = strtr($expectedText, array('\'\'\'' => '"""'));
+        $text = strtr($expectedText, ['\'\'\'' => '"""']);
 
         // windows path fix
         if ('/' !== DIRECTORY_SEPARATOR) {
@@ -159,46 +166,59 @@ class FeatureContext implements SnippetAcceptingContext
     {
         if ('fail' === $success) {
             if (0 === $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertNotEquals(0, $this->getExitCode());
+            Assert::assertNotEquals(0, $this->getExitCode());
         } else {
             if (0 !== $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertEquals(0, $this->getExitCode());
+            Assert::assertEquals(0, $this->getExitCode());
         }
     }
 
+    /**
+     * @return int|null
+     */
     private function getExitCode()
     {
         return $this->process->getExitCode();
     }
 
+    /**
+     * @return string
+     */
     private function getOutput()
     {
-        $output = $this->process->getErrorOutput() . $this->process->getOutput();
+        $output = $this->process->getErrorOutput().$this->process->getOutput();
 
         // Normalize the line endings in the output
         if ("\n" !== PHP_EOL) {
             $output = str_replace(PHP_EOL, "\n", $output);
         }
 
-        return trim(preg_replace("/ +$/m", '', $output));
+        return trim(preg_replace('/ +$/m', '', $output));
     }
 
+    /**
+     * @param string $filename
+     * @param string $content
+     */
     private function createFile($filename, $content)
     {
         $path = dirname($filename);
-        if (!is_dir($path)) {
+        if (false === is_dir($path)) {
             mkdir($path, 0777, true);
         }
 
         file_put_contents($filename, $content);
     }
 
+    /**
+     * @param string $path
+     */
     private static function clearDirectory($path)
     {
         $files = scandir($path);
@@ -206,12 +226,8 @@ class FeatureContext implements SnippetAcceptingContext
         array_shift($files);
 
         foreach ($files as $file) {
-            $file = $path . DIRECTORY_SEPARATOR . $file;
-            if (is_dir($file)) {
-                self::clearDirectory($file);
-            } else {
-                unlink($file);
-            }
+            $file = $path.DIRECTORY_SEPARATOR.$file;
+            true === is_dir($file) ? self::clearDirectory($file) : unlink($file);
         }
 
         rmdir($path);

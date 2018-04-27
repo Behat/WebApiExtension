@@ -11,8 +11,7 @@ Feature: Test app verification
               progress: ~
           extensions:
               Behat\WebApiExtension:
-                  base_url: http://localhost:8080/
-
+                  base_uri: http://127.0.0.1:8000/
           suites:
               default:
                   contexts: ['Behat\WebApiExtension\Context\WebApiContext']
@@ -40,7 +39,7 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_form.feature"
+    When I run "behat features/send_form.feature --lang=en"
     Then it should pass with:
       """
       ...
@@ -74,7 +73,7 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_raw.feature"
+    When I run "behat features/send_raw.feature --lang=en"
     Then it should pass with:
       """
       ....
@@ -94,7 +93,7 @@ Feature: Test app verification
           When I send a HEAD request to "echo"
           Then the response should not contain "HEAD"
       """
-    When I run "behat features/send_request.feature"
+    When I run "behat features/send_request.feature --lang=en"
     Then it should pass with:
       """
       ..
@@ -115,7 +114,7 @@ Feature: Test app verification
           Then the response should contain "<method>"
           And the response code should be 200
       """
-    When I run "behat features/send_request.feature"
+    When I run "behat features/send_request.feature --lang=en"
     Then it should pass with:
       """
       ...
@@ -142,18 +141,18 @@ Feature: Test app verification
 
         Scenario:
           When I send a POST request to "echo" with values:
-          | name | name |
-          | pass | pass |
+          | name | foo |
+          | pass | bar |
           Then the response should contain "POST"
           And the response should contain json:
           '''
           {
-          "name" : "name",
-          "pass": "pass"
+          "name" : "foo",
+          "pass": "bar"
           }
           '''
       """
-    When I run "behat features/send_values.feature"
+    When I run "behat features/send_values.feature --lang=en"
     Then it should pass with:
       """
       ...
@@ -173,7 +172,7 @@ Feature: Test app verification
         When I send a GET request to "/404"
         Then the response code should be 404
       """
-    When I run "behat features/error_handling.feature"
+    When I run "behat features/error_handling.feature --lang=en"
     Then it should pass with:
       """
       ..
@@ -196,7 +195,7 @@ Feature: Test app verification
         And the response should contain "foobar"
         And the response should contain "bazquux"
       """
-    When I run "behat features/headers.feature"
+    When I run "behat features/headers.feature --lang=en"
     Then it should pass with:
       """
       .....
@@ -220,7 +219,7 @@ Feature: Test app verification
         # "dXNlcjpwYXNz" === base64_encode('user', 'pass')
         And the response should contain "Basic dXNlcjpwYXNz"
       """
-    When I run "behat features/authentication.feature"
+    When I run "behat features/authentication.feature --lang=en"
     Then it should pass with:
       """
       .....

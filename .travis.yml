@@ -1,31 +1,18 @@
 language: php
 
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
-
-matrix:
-  fast_finish: true
-  include:
-    - php: 5.6
-      env: GUZZLE_VERSION=4.*
-
-before_install:
-  # start a web server on port 8080, running in the background
-  - bin/start_server.sh
+  - 7.1
 
 before_script:
   - composer self-update
-  - if [ "$GUZZLE_VERSION" != "" ]; then composer require "guzzlehttp/guzzle:${GUZZLE_VERSION}" --no-update; fi;
-  - composer install --prefer-source
+  - composer install --prefer-source --no-interaction
   - export LANG=C
   - export PATH=vendor/bin:$PATH
 
 script:
-  - behat -fprogress --strict
+  # start a web server on port 8080, running in the background
+  - bin/console server:start
+  - vendor/bin/behat -fprogress --strict --lang=en
 
 after_failure:
   - cat server.log

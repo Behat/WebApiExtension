@@ -2,6 +2,7 @@
 
 /*
  * This file is part of the Behat WebApiExtension.
+ *
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -12,7 +13,7 @@ namespace Behat\WebApiExtension\Context\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use Behat\WebApiExtension\Context\ApiClientAwareContext;
+use Behat\WebApiExtension\Context\ApiClientContextInterface;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -22,7 +23,7 @@ use GuzzleHttp\ClientInterface;
  *
  * @author Frédéric G. Marand <fgm@osinet.fr>
  */
-class ApiClientAwareInitializer implements ContextInitializer
+class ApiClientContextInitializer implements ContextInitializer
 {
     /**
      * @var ClientInterface
@@ -46,7 +47,8 @@ class ApiClientAwareInitializer implements ContextInitializer
      */
     public function initializeContext(Context $context)
     {
-        if ($context instanceof ApiClientAwareContext) {
+        if (true === $context instanceof ApiClientContextInterface) {
+            /* @var $context ApiClientContextInterface */
             $context->setClient($this->client);
         }
     }

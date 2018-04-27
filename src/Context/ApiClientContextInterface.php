@@ -2,7 +2,8 @@
 
 /*
  * This file is part of the Behat WebApiExtension.
- * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * (c) Keyclic team <techies@keyclic.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,14 +21,12 @@ use GuzzleHttp\ClientInterface;
  *
  * @see WebApiAwareInitializer
  */
-interface ApiClientAwareContext extends Context
+interface ApiClientContextInterface extends Context
 {
     /**
      * Sets Guzzle Client instance.
      *
-     * @param \GuzzleHttp\Client $client Guzzle client.
-     *
-     * @return void
+     * @param ClientInterface $client guzzle Client instance
      */
     public function setClient(ClientInterface $client);
 }

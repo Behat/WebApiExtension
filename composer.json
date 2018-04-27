@@ -1,42 +1,82 @@
 {
     "name": "behat/web-api-extension",
     "type": "behat-extension",
-    "description": "Web API extension for Behat",
+    "description": "Web API extension for Behat.",
     "keywords": ["api", "test"],
     "homepage": "http://extensions.behat.org",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Christophe Coevoet",
-            "email": "stof@notk.org"
-        },
-        {
-            "name": "Community contributors",
-            "homepage": "https://github.com/Behat/WebApiExtension/graphs/contributors"
-        }
-    ],
-
+    "authors": [{
+        "name": "Christophe Coevoet",
+        "email": "stof@notk.org"
+    }, {
+        "name": "Keyclic Team",
+        "email": "techies@keyclic.com"
+    }, {
+        "name": "Community contributors",
+        "homepage": "https://github.com/Keyclic/WebApiExtension/graphs/contributors"
+    }],
     "require": {
-        "php": ">=5.4",
-        "behat/behat": "~3.0",
-        "guzzlehttp/guzzle": "4 - 6",
-        "phpunit/phpunit": "4 - 5"
+        "php": "^7.1.3",
+        "ext-iconv": "*",
+        "ext-mbstring": "*",
+        "behat/behat": "^3.4",
+        "guzzlehttp/guzzle": "^6.3",
+        "phpunit/phpunit": "^6.5"
     },
-
     "require-dev": {
-        "symfony/process": "~2.1",
-        "silex/silex": "~1"
+        "friendsofphp/php-cs-fixer": "@stable",
+        "symfony/console": "^4.0",
+        "symfony/dotenv": "^4.0",
+        "symfony/flex": "^1.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/lts": "^4@dev",
+        "symfony/web-server-bundle": "^4.0",
+        "symfony/yaml": "^4.0"
     },
-
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Behat\\WebApiExtension\\": "src/"
         }
     },
-
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
+    },
+    "replace": {
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "php-cs-fixer": [
+            "vendor/bin/php-cs-fixer fix config",
+            "vendor/bin/php-cs-fixer fix features",
+            "vendor/bin/php-cs-fixer fix src",
+            "vendor/bin/php-cs-fixer fix tests"
+        ],
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ],
+        "test": [
+            "vendor/bin/behat -fprogress --strict --lang=en"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
     }
 }
