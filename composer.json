@@ -24,6 +24,7 @@
         "phpunit/phpunit": "^6.5"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "@stable",
         "symfony/console": "^4.0",
         "symfony/dotenv": "^4.0",
         "symfony/flex": "^1.0",
@@ -59,6 +60,12 @@
             "cache:clear": "symfony-cmd",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
         },
+        "php-cs-fixer": [
+            "vendor/bin/php-cs-fixer fix config",
+            "vendor/bin/php-cs-fixer fix features",
+            "vendor/bin/php-cs-fixer fix src",
+            "vendor/bin/php-cs-fixer fix tests"
+        ],
         "post-install-cmd": [
             "@auto-scripts"
         ],

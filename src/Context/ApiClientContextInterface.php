@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Keyclic WebApiExtension.
+ * This file is part of the Behat WebApiExtension.
  *
  * (c) Keyclic team <techies@keyclic.com>
  *
