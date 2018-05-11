@@ -4,6 +4,7 @@
  * This file is part of the Behat WebApiExtension.
  *
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Keyclic team <techies@keyclic.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,9 +21,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides methods without Features methods.
- *
- * @author Kevin Lot <klot@keyclic.com>
- * @author Keyclic team <techies@keyclic.com>
  */
 abstract class ApiClientContext implements ApiClientContextInterface
 {
@@ -90,14 +88,14 @@ abstract class ApiClientContext implements ApiClientContextInterface
     public function addHeader($name, $value)
     {
         if (isset($this->headers[$name])
-            && true === is_array($this->headers[$name])) {
+        && true === is_array($this->headers[$name])) {
             array_push($this->headers[$name], $value);
 
             return $this;
         }
 
         if (isset($this->headers[$name])
-            && false === is_array($this->headers[$name])) {
+        && false === is_array($this->headers[$name])) {
             $this->headers[$name] = [
                 $this->headers[$name],
                 $value,

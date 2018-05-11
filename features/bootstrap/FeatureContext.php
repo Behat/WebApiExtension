@@ -46,7 +46,7 @@ class FeatureContext implements Context
      */
     public function prepareScenario()
     {
-        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.(string) (microtime(true) * rand(0, 10000));
+        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.md5( (string) microtime(true) * rand(0, 10000));
 
         mkdir($dir.'/features/bootstrap', 0777, true);
 
