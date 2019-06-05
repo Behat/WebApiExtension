@@ -45,7 +45,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Client\\": "client/",
         }
     },
     "replace": {
@@ -58,7 +58,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "php-cs-fixer": [
             "vendor/bin/php-cs-fixer fix config",
