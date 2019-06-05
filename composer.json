@@ -45,7 +45,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Client\\": "client/",
+            "Client\\": "client/"
         }
     },
     "replace": {
