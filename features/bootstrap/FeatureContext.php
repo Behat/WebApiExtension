@@ -56,7 +56,6 @@ class FeatureContext implements Context
         }
         $this->workingDir = $dir;
         $this->phpBin = $php;
-        $this->process = new Process(null);
     }
 
     /**
@@ -76,24 +75,20 @@ class FeatureContext implements Context
     /**
      * Runs behat command with provided parameters.
      *
-     * @When /^I run "behat(?: ((?:\"|[^"])*))?"$/
-     *
-     * @param string $argumentsString
+     * @When /^I run "behat ([^"]*)"$/
      */
-    public function iRunBehat($argumentsString = '')
+    public function iRunBehat(string $argumentsString = '')
     {
         $argumentsString = strtr($argumentsString, ['\'' => '"']);
 
-        $this->process->setWorkingDirectory($this->workingDir);
-        $this->process->setCommandLine(
-            sprintf(
-                '%s %s %s %s',
-                $this->phpBin,
-                escapeshellarg(BEHAT_BIN_PATH),
-                $argumentsString,
-                strtr('--format-settings=\'{"timer": false}\' --no-colors', ['\'' => '"', '"' => '\"'])
-            )
-        );
+        $this->process = Process::fromShellCommandline(sprintf(
+            '%s %s %s %s',
+            $this->phpBin,
+            escapeshellarg(BEHAT_BIN_PATH),
+            $argumentsString,
+            strtr('--lang=en --format-settings=\'{"timer": false}\' --no-colors', ['\'' => '"', '"' => '\"'])
+        ), $this->workingDir);
+
         $this->process->start();
         $this->process->wait();
     }

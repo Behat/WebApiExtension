@@ -47,7 +47,7 @@ Feature: client aware context
         Scenario: client is set
           Then the client should be set
       """
-  When I run "behat -f progress features/client.feature --lang=en"
+  When I run "behat -f progress features/client.feature"
   Then it should pass with:
     """
     .
