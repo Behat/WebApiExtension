@@ -113,9 +113,6 @@
             "tests/.gitignore"
         ]
     },
-    "phpunit/phpunit-mock-objects": {
-        "version": "5.0.10"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },
