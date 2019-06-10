@@ -13,10 +13,10 @@ namespace Behat\WebApiExtension\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
 use PHPUnit\Framework\Assert;
+use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
 
 /**
  * Provides web API description definitions.
@@ -59,7 +59,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * Sends HTTP request to specific relative URL.
      *
      * @param string $method request method
-     * @param string $url relative url
+     * @param string $url    relative url
      *
      * @throws PsrClientExceptionInterface
      * @throws SymfonyClientExceptionInterface
@@ -76,8 +76,8 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with field values from Table.
      *
-     * @param string $method request method
-     * @param string $url relative url
+     * @param string    $method request method
+     * @param string    $url    relative url
      * @param TableNode $values table of post values
      *
      * @throws PsrClientExceptionInterface
@@ -101,9 +101,9 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with raw body from PyString.
      *
-     * @param string $method request method
-     * @param string $url relative url
-     * @param PyStringNode $body request body
+     * @param string       $method request method
+     * @param string       $url    relative url
+     * @param PyStringNode $body   request body
      *
      * @throws PsrClientExceptionInterface
      * @throws SymfonyClientExceptionInterface
@@ -121,9 +121,9 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with form data from PyString.
      *
-     * @param string $method request method
-     * @param string $url relative url
-     * @param PyStringNode $body request body
+     * @param string       $method request method
+     * @param string       $url    relative url
+     * @param PyStringNode $body   request body
      *
      * @throws PsrClientExceptionInterface
      * @throws SymfonyClientExceptionInterface

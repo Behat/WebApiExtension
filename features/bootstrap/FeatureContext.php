@@ -46,7 +46,7 @@ class FeatureContext implements Context
      */
     public function prepareScenario()
     {
-        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.md5( (string) microtime(true) * rand(0, 10000));
+        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'behat-web-api'.DIRECTORY_SEPARATOR.md5((string) microtime(true) * rand(0, 10000));
 
         mkdir($dir.'/features/bootstrap', 0777, true);
 
@@ -120,9 +120,33 @@ class FeatureContext implements Context
     }
 
     /**
+     * Checks whether previously run command failed|passed.
+     *
+     * @Then /^it should (fail|pass)$/
+     *
+     * @param string $success "fail" or "pass"
+     */
+    public function itShouldFail($success)
+    {
+        if ('fail' === $success) {
+            if (0 === $this->getExitCode()) {
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
+            }
+
+            Assert::assertNotEquals(0, $this->getExitCode());
+        } else {
+            if (0 !== $this->getExitCode()) {
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
+            }
+
+            Assert::assertEquals(0, $this->getExitCode());
+        }
+    }
+
+    /**
      * @param PyStringNode $expectedText
      *
-     * @return null|string|string[]
+     * @return string|string[]|null
      */
     private function getExpectedOutput(PyStringNode $expectedText)
     {
@@ -148,30 +172,6 @@ class FeatureContext implements Context
         }
 
         return $text;
-    }
-
-    /**
-     * Checks whether previously run command failed|passed.
-     *
-     * @Then /^it should (fail|pass)$/
-     *
-     * @param string $success "fail" or "pass"
-     */
-    public function itShouldFail($success)
-    {
-        if ('fail' === $success) {
-            if (0 === $this->getExitCode()) {
-                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
-            }
-
-            Assert::assertNotEquals(0, $this->getExitCode());
-        } else {
-            if (0 !== $this->getExitCode()) {
-                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
-            }
-
-            Assert::assertEquals(0, $this->getExitCode());
-        }
     }
 
     /**

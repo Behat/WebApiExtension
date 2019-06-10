@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\Psr18Client;
 
-
 /**
  * Web API extension for Behat.
  *
@@ -56,9 +55,10 @@ class WebApiExtension implements ExtensionInterface
         $builder
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('base_uri')->defaultValue('http://127.0.0.1:8000')->end()
-                ->booleanNode('verify')->defaultFalse()->end()
-            ->end();
+            ->scalarNode('base_uri')->defaultValue('http://127.0.0.1:8000')->end()
+            ->booleanNode('verify')->defaultFalse()->end()
+            ->end()
+        ;
     }
 
     /**
@@ -91,8 +91,8 @@ class WebApiExtension implements ExtensionInterface
     private function loadContextInitializer(ContainerBuilder $container, array $config)
     {
         $definition = new Definition(ApiClientContextInitializer::class, [
-          new Reference(self::CLIENT_ID),
-          $config,
+            new Reference(self::CLIENT_ID),
+            $config,
         ]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG);
 

@@ -11,15 +11,12 @@
 
 namespace Behat\WebApiExtension\Context;
 
+use Nyholm\Psr7\Request;
+use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
-use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
-
-use Nyholm\Psr7\Request;
-
 
 /**
  * Provides methods without Features methods.
@@ -63,15 +60,6 @@ abstract class ApiClientContext implements ApiClientContextInterface
         $this->baseUri = $baseUri;
 
         return $this;
-    }
-
-    private function getClient(): ClientInterface
-    {
-        if (null === $this->client) {
-            throw new \RuntimeException('Client has not been set in WebApiContext.');
-        }
-
-        return $this->client;
     }
 
     public function setClient(ClientInterface $client): ApiClientContextInterface
@@ -198,5 +186,14 @@ abstract class ApiClientContext implements ApiClientContextInterface
     protected function prepareUrl(string $url): string
     {
         return ltrim($this->replacePlaceHolder($url), '/');
+    }
+
+    private function getClient(): ClientInterface
+    {
+        if (null === $this->client) {
+            throw new \RuntimeException('Client has not been set in WebApiContext.');
+        }
+
+        return $this->client;
     }
 }
