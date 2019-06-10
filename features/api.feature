@@ -212,7 +212,7 @@ Feature: Test app verification
         I need to be able to use authentication in a scenario
 
       Scenario:
-        Given I am authenticating as "user" with "pass" password
+        Given I am basic authenticating as "user" with "pass" password
         When I send a GET request to "echo"
         Then the response should contain "headers"
         And the response should contain "authorization"
