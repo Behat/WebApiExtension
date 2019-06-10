@@ -66,10 +66,10 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "php-cs-fixer": [
+            "vendor/bin/php-cs-fixer fix client",
             "vendor/bin/php-cs-fixer fix config",
             "vendor/bin/php-cs-fixer fix features",
-            "vendor/bin/php-cs-fixer fix src",
-            "vendor/bin/php-cs-fixer fix tests"
+            "vendor/bin/php-cs-fixer fix src"
         ],
         "post-install-cmd": [
             "@auto-scripts"
