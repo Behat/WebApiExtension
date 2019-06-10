@@ -20,9 +20,11 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "behat/behat": "^3.4",
-        "guzzlehttp/guzzle": "^6.3",
-        "phpunit/phpunit": "^6.5"
+        "behat/behat": "^3.5",
+        "nyholm/psr7": "^1.1",
+        "psr/http-client": "^1.0",
+        "phpunit/phpunit": "^6.5",
+        "symfony/http-client": "^4.3"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "@stable",

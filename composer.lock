@@ -6,6 +6,7 @@
     ],
 <<<<<<< master
 <<<<<<< master
+<<<<<<< master
     "content-hash": "5dd139ed58495c9c216599a7c5de38ef",
 =======
     "content-hash": "6e9e3af1acede7478c44d0e01d34cf55",
@@ -13,6 +14,9 @@
 =======
     "content-hash": "406f319bff570a66c4aa8641bf404879",
 >>>>>>> Composer update.
+=======
+    "content-hash": "52cb437a92211061a0ea7be67627d5eb",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
     "packages": [
         {
             "name": "behat/behat",
@@ -283,189 +287,6 @@
             "time": "2019-03-17T17:37:11+00:00"
         },
         {
-            "name": "guzzlehttp/guzzle",
-            "version": "6.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/promises": "^1.0",
-                "guzzlehttp/psr7": "^1.4",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "ext-curl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
-                "psr/log": "^1.0"
-            },
-            "suggest": {
-                "psr/log": "Required for using the Log middleware"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "6.3-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/functions_include.php"
-                ],
-                "psr-4": {
-                    "GuzzleHttp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "time": "2018-04-22T15:46:56+00:00"
-        },
-        {
-            "name": "guzzlehttp/promises",
-            "version": "v1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/promises.git",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Promise\\": "src/"
-                },
-                "files": [
-                    "src/functions_include.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle promises library",
-            "keywords": [
-                "promise"
-            ],
-            "time": "2016-12-20T10:07:11+00:00"
-        },
-        {
-            "name": "guzzlehttp/psr7",
-            "version": "1.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/psr7.git",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9f83dded91781a01c63574e387eaa769be769115",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0",
-                "psr/http-message": "~1.0",
-                "ralouphie/getallheaders": "^2.0.5"
-            },
-            "provide": {
-                "psr/http-message-implementation": "1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
-                "files": [
-                    "src/functions_include.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Tobias Schultze",
-                    "homepage": "https://github.com/Tobion"
-                }
-            ],
-            "description": "PSR-7 message implementation that also provides common utility methods",
-            "keywords": [
-                "http",
-                "message",
-                "psr-7",
-                "request",
-                "response",
-                "stream",
-                "uri",
-                "url"
-            ],
-            "time": "2018-12-04T20:46:45+00:00"
-        },
-        {
             "name": "myclabs/deep-copy",
             "version": "1.9.1",
             "source": {
@@ -512,6 +333,68 @@
                 "object graph"
             ],
             "time": "2019-04-07T13:18:21+00:00"
+        },
+        {
+            "name": "nyholm/psr7",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nyholm/psr7.git",
+                "reference": "701fe7ea8c12c07b985b156d589134d328160cf7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/701fe7ea8c12c07b985b156d589134d328160cf7",
+                "reference": "701fe7ea8c12c07b985b156d589134d328160cf7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "php-http/message-factory": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "dev-master",
+                "php-http/psr7-integration-tests": "dev-master",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nyholm\\Psr7\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                },
+                {
+                    "name": "Martijn van der Ven",
+                    "email": "martijn@vanderven.se"
+                }
+            ],
+            "description": "A fast PHP7 implementation of PSR-7",
+            "homepage": "http://tnyholm.se",
+            "keywords": [
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2019-02-16T17:20:43+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -614,6 +497,56 @@
             ],
             "description": "Library for handling version information and constraints",
             "time": "2017-03-05T17:38:23+00:00"
+        },
+        {
+            "name": "php-http/message-factory",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/message-factory.git",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Factory interfaces for PSR-7 HTTP Message",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "stream",
+                "uri"
+            ],
+            "time": "2015-12-19T14:08:53+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1273,6 +1206,107 @@
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
+            "name": "psr/http-client",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-client.git",
+                "reference": "496a823ef742b632934724bf769560c2a5c7c44e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/496a823ef742b632934724bf769560c2a5c7c44e",
+                "reference": "496a823ef742b632934724bf769560c2a5c7c44e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP clients",
+            "homepage": "https://github.com/php-fig/http-client",
+            "keywords": [
+                "http",
+                "http-client",
+                "psr",
+                "psr-18"
+            ],
+            "time": "2018-10-30T23:29:13+00:00"
+        },
+        {
+            "name": "psr/http-factory",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2019-04-30T12:38:16+00:00"
+        },
+        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -1323,31 +1357,32 @@
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
-            "name": "ralouphie/getallheaders",
-            "version": "2.0.5",
+            "name": "psr/log",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ralouphie/getallheaders.git",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7.0",
-                "satooshi/php-coveralls": ">=1.0"
+                "php": ">=5.3.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "files": [
-                    "src/getallheaders.php"
-                ]
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1355,12 +1390,18 @@
             ],
             "authors": [
                 {
-                    "name": "Ralph Khattar",
-                    "email": "ralph.khattar@gmail.com"
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
-            "description": "A polyfill for getallheaders.",
-            "time": "2016-02-11T07:05:27+00:00"
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2018-11-20T15:27:04+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1980,6 +2021,7 @@
         {
             "name": "symfony/config",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
             "source": {
                 "type": "git",
@@ -1992,16 +2034,24 @@
                 "reference": "6379ee07398643e09e6ed1e87d9c62dfcad7f4eb",
 =======
             "version": "v4.3.0",
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "5455fc0ae8b46269b83a22949429ea878496408c"
+                "reference": "6379ee07398643e09e6ed1e87d9c62dfcad7f4eb"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/config/zipball/5455fc0ae8b46269b83a22949429ea878496408c",
                 "reference": "5455fc0ae8b46269b83a22949429ea878496408c",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/config/zipball/6379ee07398643e09e6ed1e87d9c62dfcad7f4eb",
+                "reference": "6379ee07398643e09e6ed1e87d9c62dfcad7f4eb",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -2053,6 +2103,7 @@
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-05-30T16:10:05+00:00"
         },
         {
@@ -2069,20 +2120,28 @@
                 "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
 =======
             "time": "2019-05-20T16:16:12+00:00"
+=======
+            "time": "2019-05-30T16:10:05+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/console",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "707b619d2c3bedf0224d56f95f77dabc60102305"
+                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/console/zipball/707b619d2c3bedf0224d56f95f77dabc60102305",
                 "reference": "707b619d2c3bedf0224d56f95f77dabc60102305",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/console/zipball/d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
+                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -2145,6 +2204,7 @@
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-05T13:25:51+00:00"
         },
         {
@@ -2161,20 +2221,28 @@
                 "reference": "fea7f73e278ee0337349a5a68b867fc656bb33f3",
 =======
             "time": "2019-05-27T08:16:38+00:00"
+=======
+            "time": "2019-06-05T13:25:51+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "aa6fe799fa5adc938fc55aeccd2f5fb0aa0b8eac"
+                "reference": "fea7f73e278ee0337349a5a68b867fc656bb33f3"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/aa6fe799fa5adc938fc55aeccd2f5fb0aa0b8eac",
                 "reference": "aa6fe799fa5adc938fc55aeccd2f5fb0aa0b8eac",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/fea7f73e278ee0337349a5a68b867fc656bb33f3",
+                "reference": "fea7f73e278ee0337349a5a68b867fc656bb33f3",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -2235,6 +2303,7 @@
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-05-30T16:10:05+00:00"
         },
         {
@@ -2251,20 +2320,28 @@
                 "reference": "4e6c670af81c4fb0b6c08b035530a9915d0b691f",
 =======
             "time": "2019-05-28T07:50:59+00:00"
+=======
+            "time": "2019-05-30T16:10:05+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "c71314cd3b9420b732e1526f33a24eff5430b5b3"
+                "reference": "4e6c670af81c4fb0b6c08b035530a9915d0b691f"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/c71314cd3b9420b732e1526f33a24eff5430b5b3",
                 "reference": "c71314cd3b9420b732e1526f33a24eff5430b5b3",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/4e6c670af81c4fb0b6c08b035530a9915d0b691f",
+                "reference": "4e6c670af81c4fb0b6c08b035530a9915d0b691f",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -2322,6 +2399,7 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-05-30T16:10:05+00:00"
         },
         {
@@ -2338,6 +2416,9 @@
                 "reference": "8fa2cf2177083dd59cf8e44ea4b6541764fbda69",
 =======
             "time": "2019-05-28T07:50:59+00:00"
+=======
+            "time": "2019-05-30T16:10:05+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -2399,6 +2480,7 @@
         },
         {
             "name": "symfony/filesystem",
+<<<<<<< master
             "version": "v4.3.0",
             "source": {
                 "type": "git",
@@ -2797,6 +2879,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/93597ce975d91c52ebfaca1253343cd9ccb7916d",
                 "reference": "93597ce975d91c52ebfaca1253343cd9ccb7916d",
+=======
+            "version": "v4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "bf2af40d738dec5e433faea7b00daa4431d0a4cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/bf2af40d738dec5e433faea7b00daa4431d0a4cf",
+                "reference": "bf2af40d738dec5e433faea7b00daa4431d0a4cf",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -2832,6 +2926,120 @@
             ],
             "description": "Generic abstractions related to translation",
             "homepage": "https://symfony.com",
+<<<<<<< master
+=======
+            "time": "2019-06-03T20:27:40+00:00"
+        },
+        {
+            "name": "symfony/http-client",
+            "version": "v4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-client.git",
+                "reference": "c453b1bb8e8a8b79c9db65a1bd86822f8c6e2bb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/c453b1bb8e8a8b79c9db65a1bd86822f8c6e2bb7",
+                "reference": "c453b1bb8e8a8b79c9db65a1bd86822f8c6e2bb7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "psr/log": "^1.0",
+                "symfony/http-client-contracts": "^1.1.3",
+                "symfony/polyfill-php73": "^1.11"
+            },
+            "provide": {
+                "psr/http-client-implementation": "1.0",
+                "symfony/http-client-implementation": "1.1"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.0",
+                "psr/http-client": "^1.0",
+                "symfony/http-kernel": "^4.3",
+                "symfony/process": "^4.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\HttpClient\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony HttpClient component",
+            "homepage": "https://symfony.com",
+            "time": "2019-06-05T13:19:12+00:00"
+        },
+        {
+            "name": "symfony/http-client-contracts",
+            "version": "v1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-client-contracts.git",
+                "reference": "05201f91d4f03c58f7324d019bdd791c8e8e418b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/05201f91d4f03c58f7324d019bdd791c8e8e418b",
+                "reference": "05201f91d4f03c58f7324d019bdd791c8e8e418b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3"
+            },
+            "suggest": {
+                "symfony/http-client-implementation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\HttpClient\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to HTTP clients",
+            "homepage": "https://symfony.com",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "keywords": [
                 "abstractions",
                 "contracts",
@@ -2840,7 +3048,11 @@
                 "interoperability",
                 "standards"
             ],
+<<<<<<< master
             "time": "2019-05-27T08:16:38+00:00"
+=======
+            "time": "2019-06-05T13:28:50+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/yaml",
@@ -3082,6 +3294,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/translation/zipball/5dda505e5f65d759741dfaf4e54b36010a4b57aa",
                 "reference": "5dda505e5f65d759741dfaf4e54b36010a4b57aa",
+<<<<<<< master
 =======
                 "assert",
                 "check",
@@ -3104,6 +3317,8 @@
                 "url": "https://api.github.com/repos/composer/semver/zipball/46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
                 "reference": "46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
 >>>>>>> Remove old packages.
+=======
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -3875,54 +4090,8 @@
             "time": "2016-08-06T20:24:11+00:00"
         },
         {
-            "name": "psr/log",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2018-11-20T15:27:04+00:00"
-        },
-        {
             "name": "symfony/cache",
+<<<<<<< master
 <<<<<<< master
             "version": "v4.3.1",
             "source": {
@@ -3936,16 +4105,24 @@
                 "reference": "2edc417da273bafee589a8758f0278416d04af38",
 =======
             "version": "v4.3.0",
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "f09463d1165396745fef0aae64b7a784c891be9f"
+                "reference": "2edc417da273bafee589a8758f0278416d04af38"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/cache/zipball/f09463d1165396745fef0aae64b7a784c891be9f",
                 "reference": "f09463d1165396745fef0aae64b7a784c891be9f",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/cache/zipball/2edc417da273bafee589a8758f0278416d04af38",
+                "reference": "2edc417da273bafee589a8758f0278416d04af38",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4011,10 +4188,14 @@
                 "psr6"
             ],
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-06T10:05:02+00:00"
 =======
             "time": "2019-05-27T08:16:38+00:00"
 >>>>>>> Remove old packages.
+=======
+            "time": "2019-06-06T10:05:02+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/cache-contracts",
@@ -4077,6 +4258,7 @@
         {
             "name": "symfony/debug",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
             "source": {
                 "type": "git",
@@ -4089,16 +4271,24 @@
                 "reference": "4e025104f1f9adb1f7a2d14fb102c9986d6e97c6",
 =======
             "version": "v4.3.0",
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "97cde06d798f1326857090bc1b7c8f9d225c3dcb"
+                "reference": "4e025104f1f9adb1f7a2d14fb102c9986d6e97c6"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/debug/zipball/97cde06d798f1326857090bc1b7c8f9d225c3dcb",
                 "reference": "97cde06d798f1326857090bc1b7c8f9d225c3dcb",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/debug/zipball/4e025104f1f9adb1f7a2d14fb102c9986d6e97c6",
+                "reference": "4e025104f1f9adb1f7a2d14fb102c9986d6e97c6",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4142,6 +4332,7 @@
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-05-30T16:10:05+00:00"
         },
         {
@@ -4154,6 +4345,13 @@
             "name": "symfony/dotenv",
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "time": "2019-05-30T16:10:05+00:00"
+        },
+        {
+            "name": "symfony/dotenv",
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dotenv.git",
@@ -4211,10 +4409,14 @@
         {
             "name": "symfony/finder",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
 =======
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -4264,6 +4466,7 @@
         {
             "name": "symfony/flex",
 <<<<<<< master
+<<<<<<< master
             "version": "v1.2.6",
             "source": {
                 "type": "git",
@@ -4276,16 +4479,24 @@
                 "reference": "5ed49091eb73f912dd23dab92bf07c0180cfb009",
 =======
             "version": "v1.2.5",
+=======
+            "version": "v1.2.6",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "27909122a3da4676c3dc5dc34c8f82323c610d69"
+                "reference": "5ed49091eb73f912dd23dab92bf07c0180cfb009"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/flex/zipball/27909122a3da4676c3dc5dc34c8f82323c610d69",
                 "reference": "27909122a3da4676c3dc5dc34c8f82323c610d69",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/flex/zipball/5ed49091eb73f912dd23dab92bf07c0180cfb009",
+                "reference": "5ed49091eb73f912dd23dab92bf07c0180cfb009",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4322,6 +4533,7 @@
             ],
             "description": "Composer plugin for Symfony",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-05T14:26:30+00:00"
         },
         {
@@ -4338,20 +4550,28 @@
                 "reference": "fe407e6840d2b8f34c3fb67111e05c6d65319ef6",
 =======
             "time": "2019-05-07T08:10:46+00:00"
+=======
+            "time": "2019-06-05T14:26:30+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/framework-bundle",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "19714b45c7b5af238e66720017bae6fcf2d5fa01"
+                "reference": "fe407e6840d2b8f34c3fb67111e05c6d65319ef6"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/19714b45c7b5af238e66720017bae6fcf2d5fa01",
                 "reference": "19714b45c7b5af238e66720017bae6fcf2d5fa01",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/fe407e6840d2b8f34c3fb67111e05c6d65319ef6",
+                "reference": "fe407e6840d2b8f34c3fb67111e05c6d65319ef6",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4461,6 +4681,7 @@
             "description": "Symfony FrameworkBundle",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-06T08:35:06+00:00"
         },
         {
@@ -4477,20 +4698,28 @@
                 "reference": "b7e4945dd9b277cd24e93566e4da0a87956392a9",
 =======
             "time": "2019-05-30T03:17:01+00:00"
+=======
+            "time": "2019-06-06T08:35:06+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "e8da078912bed1339f046c3a9488a5cbd0605971"
+                "reference": "b7e4945dd9b277cd24e93566e4da0a87956392a9"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/http-foundation/zipball/e8da078912bed1339f046c3a9488a5cbd0605971",
                 "reference": "e8da078912bed1339f046c3a9488a5cbd0605971",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/b7e4945dd9b277cd24e93566e4da0a87956392a9",
+                "reference": "b7e4945dd9b277cd24e93566e4da0a87956392a9",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4533,6 +4762,7 @@
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-06T10:05:02+00:00"
         },
         {
@@ -4549,20 +4779,28 @@
                 "reference": "738ad561cd6a8d1c44ee1da941b2e628e264c429",
 =======
             "time": "2019-05-29T18:10:42+00:00"
+=======
+            "time": "2019-06-06T10:05:02+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "b4ce396bdce518978a17324d3d39d61058d039e6"
+                "reference": "738ad561cd6a8d1c44ee1da941b2e628e264c429"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/http-kernel/zipball/b4ce396bdce518978a17324d3d39d61058d039e6",
                 "reference": "b4ce396bdce518978a17324d3d39d61058d039e6",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/738ad561cd6a8d1c44ee1da941b2e628e264c429",
+                "reference": "738ad561cd6a8d1c44ee1da941b2e628e264c429",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -4642,14 +4880,18 @@
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-06T13:23:34+00:00"
 =======
             "time": "2019-05-30T06:21:08+00:00"
 >>>>>>> Remove old packages.
+=======
+            "time": "2019-06-06T13:23:34+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/mime",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
 <<<<<<< master
@@ -4662,10 +4904,11 @@
                 "reference": "c1affae45b78aee036effa1759237e7fa96d4af2",
 =======
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "0b166aee243364cd9de05755d2e9651876090abb"
+                "reference": "ec2c5565de60e03f33d4296a655e3273f0ad1f8b"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/mime/zipball/0b166aee243364cd9de05755d2e9651876090abb",
                 "reference": "0b166aee243364cd9de05755d2e9651876090abb",
 >>>>>>> Remove old packages.
@@ -4724,6 +4967,8 @@
             },
             "dist": {
                 "type": "zip",
+=======
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "url": "https://api.github.com/repos/symfony/mime/zipball/ec2c5565de60e03f33d4296a655e3273f0ad1f8b",
                 "reference": "ec2c5565de60e03f33d4296a655e3273f0ad1f8b",
                 "shasum": ""
@@ -4774,6 +5019,7 @@
                 "mime-type"
             ],
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-04T09:22:54+00:00"
         },
         {
@@ -4781,19 +5027,22 @@
             "version": "v4.3.1",
 =======
             "time": "2019-05-22T13:16:28+00:00"
+=======
+            "time": "2019-06-04T09:22:54+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/monolog-bridge",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bridge.git",
-                "reference": "8365f0e5fed85841f977cf9d665bfb61b392dcdf"
+                "reference": "64179561f09cf196090fd5d86888a5f99d86d30a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bridge/zipball/8365f0e5fed85841f977cf9d665bfb61b392dcdf",
-                "reference": "8365f0e5fed85841f977cf9d665bfb61b392dcdf",
+                "url": "https://api.github.com/repos/symfony/monolog-bridge/zipball/64179561f09cf196090fd5d86888a5f99d86d30a",
+                "reference": "64179561f09cf196090fd5d86888a5f99d86d30a",
                 "shasum": ""
             },
             "require": {
@@ -4846,7 +5095,7 @@
             ],
             "description": "Symfony Monolog Bridge",
             "homepage": "https://symfony.com",
-            "time": "2019-05-27T08:16:38+00:00"
+            "time": "2019-05-30T16:10:05+00:00"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -4913,8 +5162,12 @@
         },
         {
             "name": "symfony/options-resolver",
+<<<<<<< master
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -5086,6 +5339,7 @@
         {
             "name": "symfony/process",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
             "source": {
                 "type": "git",
@@ -5098,16 +5352,24 @@
                 "reference": "856d35814cf287480465bb7a6c413bb7f5f5e69c",
 =======
             "version": "v4.3.0",
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "a5e3dd4e93a364668034a3cb6efa963d0b33ab45"
+                "reference": "856d35814cf287480465bb7a6c413bb7f5f5e69c"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/process/zipball/a5e3dd4e93a364668034a3cb6efa963d0b33ab45",
                 "reference": "a5e3dd4e93a364668034a3cb6efa963d0b33ab45",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/process/zipball/856d35814cf287480465bb7a6c413bb7f5f5e69c",
+                "reference": "856d35814cf287480465bb7a6c413bb7f5f5e69c",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -5144,6 +5406,7 @@
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
 <<<<<<< master
+<<<<<<< master
             "time": "2019-05-30T16:10:05+00:00"
         },
         {
@@ -5160,20 +5423,28 @@
                 "reference": "9b31cd24f6ad2cebde6845f6daa9c6d69efe2465",
 =======
             "time": "2019-05-26T20:47:49+00:00"
+=======
+            "time": "2019-05-30T16:10:05+00:00"
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
         },
         {
             "name": "symfony/routing",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "e6cc85f03102ef5e4aedfe636f83e58cf6fd7338"
+                "reference": "9b31cd24f6ad2cebde6845f6daa9c6d69efe2465"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< master
                 "url": "https://api.github.com/repos/symfony/routing/zipball/e6cc85f03102ef5e4aedfe636f83e58cf6fd7338",
                 "reference": "e6cc85f03102ef5e4aedfe636f83e58cf6fd7338",
 >>>>>>> Remove old packages.
+=======
+                "url": "https://api.github.com/repos/symfony/routing/zipball/9b31cd24f6ad2cebde6845f6daa9c6d69efe2465",
+                "reference": "9b31cd24f6ad2cebde6845f6daa9c6d69efe2465",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
                 "shasum": ""
             },
             "require": {
@@ -5237,6 +5508,7 @@
                 "url"
             ],
 <<<<<<< master
+<<<<<<< master
             "time": "2019-06-05T09:16:20+00:00"
         },
         {
@@ -5249,6 +5521,13 @@
             "name": "symfony/stopwatch",
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "time": "2019-06-05T09:16:20+00:00"
+        },
+        {
+            "name": "symfony/stopwatch",
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -5299,10 +5578,14 @@
         {
             "name": "symfony/var-exporter",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
 =======
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
@@ -5363,10 +5646,14 @@
         {
             "name": "symfony/web-server-bundle",
 <<<<<<< master
+<<<<<<< master
             "version": "v4.3.1",
 =======
             "version": "v4.3.0",
 >>>>>>> Remove old packages.
+=======
+            "version": "v4.3.1",
+>>>>>>> Replace Guzzle by HttpClient of Symfony with PSR implementation.
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-server-bundle.git",
