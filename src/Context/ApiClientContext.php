@@ -16,7 +16,7 @@ use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as ClientExceptionInterface;
 
 /**
  * Provides methods without Features methods.
@@ -149,7 +149,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
 
     /**
      * @throws PsrClientExceptionInterface
-     * @throws SymfonyClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
     protected function sendRequest(string $method, string $uri, array $headers = [], ?string $body = null)
     {
@@ -157,14 +157,12 @@ abstract class ApiClientContext implements ApiClientContextInterface
 
         try {
             $this->response = $this->getClient()->sendRequest($this->request);
-        } catch (SymfonyClientExceptionInterface $e) {
+        } catch (ClientExceptionInterface $e) {
             $this->response = $e->getResponse();
 
             if (null === $this->response) {
                 throw $e;
             }
-        } catch (PsrClientExceptionInterface $e) {
-            throw $e;
         }
     }
 
