@@ -13,7 +13,8 @@ namespace Behat\WebApiExtension\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
@@ -21,7 +22,6 @@ use Psr\Http\Message\RequestInterface;
  * Provides web API description definitions.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
- * @author Kevin Lot <klot@keyclic.com>
  * @author Keyclic team <techies@keyclic.com>
  */
 class WebApiContext extends ApiClientContext implements ApiClientContextInterface
@@ -34,27 +34,12 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Given /^I am basic authenticating as "([^"]*)" with "([^"]*)" password$/
      */
-    public function iAmBasicAuthenticatingAs($username, $password)
+    public function iAmBasicAuthenticatingAs($username, $password): void
     {
         $authorization = base64_encode($username.':'.$password);
 
         $this->removeHeader('Authorization');
         $this->addHeader('Authorization', 'Basic '.$authorization);
-    }
-
-    /**
-     * Adds Basic Authentication header to next request.
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @Given /^I am authenticating as "([^"]*)" with "([^"]*)" password$/
-     *
-     * @deprecated
-     */
-    public function iAmAuthenticatingAs($username, $password)
-    {
-        $this->iAmBasicAuthenticatingAs($username, $password);
     }
 
     /**
@@ -65,7 +50,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Given /^I set header "([^"]*)" with value "([^"]*)"$/
      */
-    public function iSetHeaderWithValue($name, $value)
+    public function iSetHeaderWithValue($name, $value): void
     {
         $this->addHeader($name, $value);
     }
@@ -74,13 +59,14 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * Sends HTTP request to specific relative URL.
      *
      * @param string $method request method
-     * @param string $url    relative url
+     * @param string $url relative url
      *
-     * @throws GuzzleException
+     * @throws PsrClientExceptionInterface
+     * @throws SymfonyClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
      */
-    public function iSendARequest($method, $url)
+    public function iSendARequest($method, $url): void
     {
         $url = $this->prepareUrl($url);
 
@@ -90,15 +76,16 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with field values from Table.
      *
-     * @param string    $method request method
-     * @param string    $url    relative url
+     * @param string $method request method
+     * @param string $url relative url
      * @param TableNode $values table of post values
      *
-     * @throws GuzzleException
+     * @throws PsrClientExceptionInterface
+     * @throws SymfonyClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with values:$/
      */
-    public function iSendARequestWithValues($method, $url, TableNode $values)
+    public function iSendARequestWithValues($method, $url, TableNode $values): void
     {
         $url = $this->prepareUrl($url);
 
@@ -114,15 +101,16 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with raw body from PyString.
      *
-     * @param string       $method request method
-     * @param string       $url    relative url
-     * @param PyStringNode $body   request body
+     * @param string $method request method
+     * @param string $url relative url
+     * @param PyStringNode $body request body
      *
-     * @throws GuzzleException
+     * @throws PsrClientExceptionInterface
+     * @throws SymfonyClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
      */
-    public function iSendARequestWithBody($method, $url, PyStringNode $body)
+    public function iSendARequestWithBody($method, $url, PyStringNode $body): void
     {
         $url = $this->prepareUrl($url);
         $body = $this->replacePlaceHolder(trim($body));
@@ -133,15 +121,16 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
     /**
      * Sends HTTP request to specific URL with form data from PyString.
      *
-     * @param string       $method request method
-     * @param string       $url    relative url
-     * @param PyStringNode $body   request body
+     * @param string $method request method
+     * @param string $url relative url
+     * @param PyStringNode $body request body
      *
-     * @throws GuzzleException
+     * @throws PsrClientExceptionInterface
+     * @throws SymfonyClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with form data:$/
      */
-    public function iSendARequestWithFormData($method, $url, PyStringNode $body)
+    public function iSendARequestWithFormData($method, $url, PyStringNode $body): void
     {
         $url = $this->prepareUrl($url);
         $body = $this->replacePlaceHolder(trim($body));
@@ -162,7 +151,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then /^(?:the )?response code should be (\d+)$/
      */
-    public function theResponseCodeShouldBe($code)
+    public function theResponseCodeShouldBe($code): void
     {
         $expected = intval($code);
         $statusCode = intval($this->getResponse()->getStatusCode());
@@ -177,7 +166,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then /^(?:the )?response should contain "([^"]*)"$/
      */
-    public function theResponseShouldContain($text)
+    public function theResponseShouldContain($text): void
     {
         $expectedRegexp = '/'.preg_quote($text).'/i';
         $bodyResponse = (string) $this->getResponse()->getBody();
@@ -192,7 +181,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then /^(?:the )?response should not contain "([^"]*)"$/
      */
-    public function theResponseShouldNotContain($text)
+    public function theResponseShouldNotContain($text): void
     {
         $expectedRegexp = '/'.preg_quote($text).'/';
         $bodyResponse = (string) $this->getResponse()->getBody();
@@ -211,7 +200,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then /^(?:the )?response should contain json:$/
      */
-    public function theResponseShouldContainJson(PyStringNode $jsonString)
+    public function theResponseShouldContainJson(PyStringNode $jsonString): void
     {
         $rawJsonString = $this->replacePlaceHolder($jsonString->getRaw());
 
@@ -237,7 +226,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then /^the response "([^"]*)" header should be "([^"]*)"$/
      */
-    public function theResponseHeaderShouldBe($name, $expected)
+    public function theResponseHeaderShouldBe($name, $expected): void
     {
         $actual = $this->getResponse()->getHeaderLine($name);
         Assert::assertEquals($expected, $actual);
@@ -248,7 +237,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      *
      * @Then print response
      */
-    public function printResponse()
+    public function printResponse(): void
     {
         $request = '';
         if ($this->getRequest() instanceof RequestInterface) {
@@ -262,7 +251,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
         $response = sprintf(
             "%d:\n%s",
             $this->getResponse()->getStatusCode(),
-            (string) $this->getResponse()->getBody()
+            (string) $this->getResponse()->getContent(false)
         );
 
         echo sprintf('%s => %s', $request, $response);
