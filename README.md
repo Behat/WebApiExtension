@@ -16,4 +16,8 @@ Copyright (c) 2014 Konstantin Kudryashov (ever.zet). See LICENSE for details.
 ## Contributors
 
 * Christophe Coevoet [stof](http://github.com/stof) [lead developer]
-* Other [awesome developers](https://github.com/Behat/WebApiExtension/graphs/contributors)
+* Keyclic team [Keyclic](http://github.com/Keyclic)
+* Other [community developers](https://github.com/Keyclic/WebApiExtension/graphs/contributors)
+* Inspired by others forks too :
+  - [LinioIT/behat-web-api-extension](https://github.com/LinioIT/behat-web-api-extension)
+  - [BehatExtension/WebApiExtension](https://github.com/BehatExtension/WebApiExtension)
