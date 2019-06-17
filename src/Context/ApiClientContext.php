@@ -33,7 +33,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
     /**
      * @var ClientInterface
      */
-    protected $client;
+    private $client;
 
     /**
      * @var array
@@ -69,12 +69,12 @@ abstract class ApiClientContext implements ApiClientContextInterface
         return $this;
     }
 
-    public function getHeaders(): array
+    protected function getHeaders(): array
     {
         return $this->headers;
     }
 
-    public function addHeader(string $name, string $value): ApiClientContextInterface
+    protected function addHeader(string $name, string $value): ApiClientContextInterface
     {
         if (false === isset($this->headers[$name])) {
             $this->headers[$name] = $value;
@@ -100,7 +100,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
         return $this;
     }
 
-    public function removeHeader(string $name): ApiClientContextInterface
+    protected function removeHeader(string $name): ApiClientContextInterface
     {
         if (array_key_exists($name, $this->headers)) {
             unset($this->headers[$name]);
@@ -115,7 +115,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
      * you can specify placeholders, which will
      * be replaced in URL, request or response body.
      */
-    public function addPlaceholder(string $key, string $value): ApiClientContextInterface
+    protected function addPlaceholder(string $key, string $value): ApiClientContextInterface
     {
         $this->placeHolders[$key] = $value;
 
@@ -125,7 +125,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
     /**
      * Removes a placeholder identified by $key.
      */
-    public function removePlaceHolder(string $key): ApiClientContext
+    protected function removePlaceHolder(string $key): ApiClientContext
     {
         if (array_key_exists($key, $this->placeHolders)) {
             unset($this->placeHolders[$key]);
@@ -134,7 +134,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
         return $this;
     }
 
-    public function getRequest(): RequestInterface
+    protected function getRequest(): RequestInterface
     {
         return $this->request;
     }
@@ -142,7 +142,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
     /**
      * @return ResponseInterface
      */
-    public function getResponse()
+    protected function getResponse()
     {
         return $this->response;
     }
@@ -186,7 +186,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
         return ltrim($this->replacePlaceHolder($url), '/');
     }
 
-    private function getClient(): ClientInterface
+    protected function getClient(): ClientInterface
     {
         if (null === $this->client) {
             throw new \RuntimeException('Client has not been set in WebApiContext.');

@@ -56,7 +56,6 @@ class WebApiExtension implements ExtensionInterface
             ->addDefaultsIfNotSet()
             ->children()
             ->scalarNode('base_uri')->defaultValue('http://127.0.0.1:8000')->end()
-            ->booleanNode('verify')->defaultFalse()->end()
             ->end()
         ;
     }

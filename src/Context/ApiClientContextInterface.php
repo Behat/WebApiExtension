@@ -25,12 +25,12 @@ use Psr\Http\Client\ClientInterface;
 interface ApiClientContextInterface extends Context
 {
     /**
-     * Sets HttpClient instance.
-     */
-    public function setClient(ClientInterface $client): self;
-
-    /**
      * Sets base of uri string.
      */
     public function setBaseUri(string $uri): self;
+
+    /**
+     * Sets HttpClient instance.
+     */
+    public function setClient(ClientInterface $client): self;
 }
