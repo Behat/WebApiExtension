@@ -14,30 +14,32 @@ namespace Behat\WebApiExtension\Context\Initializer;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 use Behat\WebApiExtension\Context\ApiClientContextInterface;
-use GuzzleHttp\ClientInterface;
+use Psr\Http\Client\ClientInterface;
 
 /**
- * Guzzle-aware contexts initializer.
+ * HttpClient contexts initializer.
  *
- * Sets Guzzle client instance to the ApiClientAwareContext.
+ * Sets http client instance to the ApiClientAwareContext.
  *
  * @author Frédéric G. Marand <fgm@osinet.fr>
+ * @author Keyclic <techies@keyclic.com>
  */
 class ApiClientContextInitializer implements ContextInitializer
 {
+    /**
+     * @var string
+     */
+    private $baseUri;
+
     /**
      * @var ClientInterface
      */
     private $client;
 
-    /**
-     * Initializes initializer.
-     *
-     * @param ClientInterface $client
-     */
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, array $config)
     {
         $this->client = $client;
+        $this->baseUri = $config['base_uri'];
     }
 
     /**
@@ -50,6 +52,7 @@ class ApiClientContextInitializer implements ContextInitializer
         if (true === $context instanceof ApiClientContextInterface) {
             /* @var $context ApiClientContextInterface */
             $context->setClient($this->client);
+            $context->setBaseUri($this->baseUri);
         }
     }
 }

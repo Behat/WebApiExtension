@@ -1,12 +1,14 @@
 ###> symfony/framework-bundle ###
-.env
+/.env.local
+/.env.local.php
+/.env.*.local
 /public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
 
 ###> symfony/web-server-bundle ###
-.web-server-pid
+/.web-server-pid
 ###< symfony/web-server-bundle ###
 
 ###> IDE ###
@@ -15,6 +17,7 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
+.phpunit.result.cache
 ###< phpunit/phpunit ###
 
 ###> friendsofphp/php-cs-fixer ###

@@ -15,11 +15,11 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\WebApiExtension\Context\Initializer\ApiClientContextInitializer;
-use GuzzleHttp\Client;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpClient\Psr18Client;
 
 /**
  * Web API extension for Behat.
@@ -55,9 +55,9 @@ class WebApiExtension implements ExtensionInterface
         $builder
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('base_uri')->defaultValue('http://127.0.0.1:8000')->end()
-                ->booleanNode('verify')->defaultFalse()->end()
-            ->end();
+            ->scalarNode('base_uri')->defaultValue('http://127.0.0.1:8000')->end()
+            ->end()
+        ;
     }
 
     /**
@@ -65,7 +65,7 @@ class WebApiExtension implements ExtensionInterface
      */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadClient($container, $config);
+        $this->loadClient($container);
         $this->loadContextInitializer($container, $config);
     }
 
@@ -76,16 +76,9 @@ class WebApiExtension implements ExtensionInterface
     {
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function loadClient(ContainerBuilder $container, array $config)
+    private function loadClient(ContainerBuilder $container)
     {
-        $definition = new Definition(Client::class, [[
-            'base_uri' => $config['base_uri'],
-            'verify' => $config['verify'],
-        ]]);
+        $definition = new Definition(Psr18Client::class);
 
         $container->setDefinition(self::CLIENT_ID, $definition);
     }
@@ -97,8 +90,8 @@ class WebApiExtension implements ExtensionInterface
     private function loadContextInitializer(ContainerBuilder $container, array $config)
     {
         $definition = new Definition(ApiClientContextInitializer::class, [
-          new Reference(self::CLIENT_ID),
-          $config,
+            new Reference(self::CLIENT_ID),
+            $config,
         ]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG);
 

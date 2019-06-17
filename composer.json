@@ -17,21 +17,24 @@
     }],
     "require": {
         "php": "^7.1.3",
+        "ext-ctype": "*",
         "ext-iconv": "*",
-        "ext-mbstring": "*",
-        "behat/behat": "^3.4",
-        "guzzlehttp/guzzle": "^6.3",
-        "phpunit/phpunit": "^6.5"
+        "ext-json": "*",
+        "behat/behat": "^3.5",
+        "nyholm/psr7": "^1.1",
+        "phpunit/phpunit": "^6.5|^7.4",
+        "psr/http-client": "^1.0",
+        "symfony/http-client": "^4.3"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "@stable",
-        "symfony/console": "^4.0",
-        "symfony/dotenv": "^4.0",
-        "symfony/flex": "^1.0",
-        "symfony/framework-bundle": "^4.0",
-        "symfony/lts": "^4@dev",
-        "symfony/web-server-bundle": "^4.0",
-        "symfony/yaml": "^4.0"
+        "symfony/console": "^4.3",
+        "symfony/dotenv": "^4.3",
+        "symfony/flex": "^1.2",
+        "symfony/framework-bundle": "^4.3",
+        "symfony/monolog-bundle": "^3.3",
+        "symfony/web-server-bundle": "^4.3",
+        "symfony/yaml": "^4.3"
     },
     "config": {
         "preferred-install": {
@@ -46,11 +49,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Client\\": "client/"
         }
     },
     "replace": {
+        "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-json": "*",
         "symfony/polyfill-php71": "*",
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php56": "*"
@@ -58,13 +63,13 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "php-cs-fixer": [
+            "vendor/bin/php-cs-fixer fix client",
             "vendor/bin/php-cs-fixer fix config",
             "vendor/bin/php-cs-fixer fix features",
-            "vendor/bin/php-cs-fixer fix src",
-            "vendor/bin/php-cs-fixer fix tests"
+            "vendor/bin/php-cs-fixer fix src"
         ],
         "post-install-cmd": [
             "@auto-scripts"

@@ -39,7 +39,7 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_form.feature --lang=en"
+    When I run "behat features/send_form.feature"
     Then it should pass with:
       """
       ...
@@ -73,7 +73,7 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_raw.feature --lang=en"
+    When I run "behat features/send_raw.feature"
     Then it should pass with:
       """
       ....
@@ -93,7 +93,7 @@ Feature: Test app verification
           When I send a HEAD request to "echo"
           Then the response should not contain "HEAD"
       """
-    When I run "behat features/send_request.feature --lang=en"
+    When I run "behat features/send_request.feature"
     Then it should pass with:
       """
       ..
@@ -114,7 +114,7 @@ Feature: Test app verification
           Then the response should contain "<method>"
           And the response code should be 200
       """
-    When I run "behat features/send_request.feature --lang=en"
+    When I run "behat features/send_request.feature"
     Then it should pass with:
       """
       ...
@@ -152,7 +152,7 @@ Feature: Test app verification
           }
           '''
       """
-    When I run "behat features/send_values.feature --lang=en"
+    When I run "behat features/send_values.feature"
     Then it should pass with:
       """
       ...
@@ -172,7 +172,7 @@ Feature: Test app verification
         When I send a GET request to "/404"
         Then the response code should be 404
       """
-    When I run "behat features/error_handling.feature --lang=en"
+    When I run "behat features/error_handling.feature"
     Then it should pass with:
       """
       ..
@@ -195,7 +195,7 @@ Feature: Test app verification
         And the response should contain "foobar"
         And the response should contain "bazquux"
       """
-    When I run "behat features/headers.feature --lang=en"
+    When I run "behat features/headers.feature"
     Then it should pass with:
       """
       .....
@@ -212,14 +212,14 @@ Feature: Test app verification
         I need to be able to use authentication in a scenario
 
       Scenario:
-        Given I am authenticating as "user" with "pass" password
+        Given I am basic authenticating as "user" with "pass" password
         When I send a GET request to "echo"
         Then the response should contain "headers"
         And the response should contain "authorization"
         # "dXNlcjpwYXNz" === base64_encode('user', 'pass')
         And the response should contain "Basic dXNlcjpwYXNz"
       """
-    When I run "behat features/authentication.feature --lang=en"
+    When I run "behat features/authentication.feature"
     Then it should pass with:
       """
       .....

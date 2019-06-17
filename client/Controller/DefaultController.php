@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Controller;
+namespace Client\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +25,9 @@ class DefaultController
     public function echo(Request $request)
     {
         $return = [
-           'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
-           'method' => $request->getMethod(),
-       ];
+            'warning' => 'Do not expose this service in production : it is intrinsically unsafe',
+            'method' => $request->getMethod(),
+        ];
 
         // Forms should be read from request, other data straight from input.
         $requestData = $request->request->all();
