@@ -59,6 +59,9 @@
             "config/packages/nyholm_psr7.yaml"
         ]
     },
+    "paragonie/random_compat": {
+        "version": "v9.99.99"
+    },
     "phar-io/manifest": {
         "version": "1.0.3"
     },
@@ -276,10 +279,16 @@
     "symfony/options-resolver": {
         "version": "v4.3.1"
     },
+    "symfony/polyfill-ctype": {
+        "version": "v1.11.0"
+    },
     "symfony/polyfill-intl-idn": {
         "version": "v1.11.0"
     },
     "symfony/polyfill-mbstring": {
+        "version": "v1.11.0"
+    },
+    "symfony/polyfill-php70": {
         "version": "v1.11.0"
     },
     "symfony/polyfill-php72": {
