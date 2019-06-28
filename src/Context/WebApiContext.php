@@ -246,7 +246,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
         $response = sprintf(
             "%d:\n%s",
             $this->getResponse()->getStatusCode(),
-            (string) $this->getResponse()->getContent(false)
+            (string) $this->getResponse()->getBody()
         );
 
         echo sprintf('%s => %s', $request, $response);
