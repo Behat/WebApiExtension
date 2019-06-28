@@ -22,7 +22,7 @@
         "ext-json": "*",
         "behat/behat": "^3.5",
         "nyholm/psr7": "^1.1",
-        "phpunit/phpunit": "^6.5|^7.4",
+        "phpunit/phpunit": "~6.5.0|~7.4.0",
         "psr/http-client": "^1.0",
         "symfony/http-client": "^4.3"
     },
@@ -30,9 +30,9 @@
         "friendsofphp/php-cs-fixer": "@stable",
         "symfony/console": "^4.3",
         "symfony/dotenv": "^4.3",
-        "symfony/flex": "^1.2",
+        "symfony/flex": "^1.4",
         "symfony/framework-bundle": "^4.3",
-        "symfony/monolog-bundle": "^3.3",
+        "symfony/monolog-bundle": "^3.4",
         "symfony/web-server-bundle": "^4.3",
         "symfony/yaml": "^4.3"
     },

@@ -14,9 +14,8 @@ namespace Behat\WebApiExtension\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use Psr\Http\Client\ClientExceptionInterface as PsrClientExceptionInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyClientExceptionInterface;
 
 /**
  * Provides web API description definitions.
@@ -61,8 +60,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * @param string $method request method
      * @param string $url    relative url
      *
-     * @throws PsrClientExceptionInterface
-     * @throws SymfonyClientExceptionInterface
+     * @throws ClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)"$/
      */
@@ -80,8 +78,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * @param string    $url    relative url
      * @param TableNode $values table of post values
      *
-     * @throws PsrClientExceptionInterface
-     * @throws SymfonyClientExceptionInterface
+     * @throws ClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with values:$/
      */
@@ -105,8 +102,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * @param string       $url    relative url
      * @param PyStringNode $body   request body
      *
-     * @throws PsrClientExceptionInterface
-     * @throws SymfonyClientExceptionInterface
+     * @throws ClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with body:$/
      */
@@ -125,8 +121,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
      * @param string       $url    relative url
      * @param PyStringNode $body   request body
      *
-     * @throws PsrClientExceptionInterface
-     * @throws SymfonyClientExceptionInterface
+     * @throws ClientExceptionInterface
      *
      * @When /^(?:I )?send a ([A-Z]+) request to "([^"]+)" with form data:$/
      */
@@ -251,7 +246,7 @@ class WebApiContext extends ApiClientContext implements ApiClientContextInterfac
         $response = sprintf(
             "%d:\n%s",
             $this->getResponse()->getStatusCode(),
-            (string) $this->getResponse()->getContent(false)
+            (string) $this->getResponse()->getBody()
         );
 
         echo sprintf('%s => %s', $request, $response);

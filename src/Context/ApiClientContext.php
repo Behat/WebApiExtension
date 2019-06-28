@@ -11,17 +11,11 @@
 
 namespace Behat\WebApiExtension\Context;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Request;
-use Psr\Http\Client\ClientExceptionInterface as PsrHttpClientExceptionInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface as SymfonyHttpClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyResponseInterface;
 
 /**
  * Provides methods without Features methods.
@@ -153,40 +147,13 @@ abstract class ApiClientContext implements ApiClientContextInterface
     }
 
     /**
-     * @throws PsrHttpClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws SymfonyHttpClientExceptionInterface
-     * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
      */
     protected function sendRequest(string $method, string $uri, array $headers = [], ?string $body = null)
     {
         $this->request = new Request($method, $this->baseUri.$uri, $headers, $body);
 
-        try {
-            $this->response = $this->getClient()->sendRequest($this->request);
-        }
-        // This exception is returned when status code is superior to 400
-        // Temporary fix, waiting for httpclient 4.3.2
-        // TODO Remove after update
-        catch (SymfonyHttpClientExceptionInterface $e) {
-            /** @var SymfonyResponseInterface $response */
-            $response = $e->getResponse();
-
-            if (null === $response) {
-                throw $e;
-            }
-
-            $psr17Factory = new Psr17Factory();
-
-            $psrResponse = $psr17Factory->createResponse($response->getStatusCode());
-
-            foreach ($response->getHeaders(false) as $name => $values) {
-                $this->response = $e->getResponse();
-            }
-
-            $this->response = $psrResponse->withBody($psr17Factory->createStream($response->getContent(false)));
-        }
+        $this->response = $this->getClient()->sendRequest($this->request);
     }
 
     /**
