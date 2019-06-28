@@ -12,7 +12,7 @@
 namespace Behat\WebApiExtension\Context;
 
 use Nyholm\Psr7\Request;
-use Psr\Http\Client\ClientExceptionInterface as PsrHttpClientExceptionInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -147,7 +147,7 @@ abstract class ApiClientContext implements ApiClientContextInterface
     }
 
     /**
-     * @throws PsrHttpClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
     protected function sendRequest(string $method, string $uri, array $headers = [], ?string $body = null)
     {
