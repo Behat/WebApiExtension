@@ -1,0 +1,13 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PHP71Migration' => true,
+        '@PhpCsFixer' => true,
+        '@Symfony' => true,
+        'array_syntax' => [
+            'syntax' => 'short'
+        ],
+    ])
+    ->setUsingCache(false)
+;

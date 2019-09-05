@@ -1,0 +1,7 @@
+echo:
+   path: /echo
+   controller: Client\Controller\DefaultController::echo
+
+error:
+   path: /404
+   controller: Client\Controller\DefaultController::error

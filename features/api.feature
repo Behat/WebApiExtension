@@ -11,8 +11,7 @@ Feature: Test app verification
               progress: ~
           extensions:
               Behat\WebApiExtension:
-                  base_url: http://localhost:8080/
-
+                  base_uri: http://127.0.0.1:8000/
           suites:
               default:
                   contexts: ['Behat\WebApiExtension\Context\WebApiContext']
@@ -142,14 +141,14 @@ Feature: Test app verification
 
         Scenario:
           When I send a POST request to "echo" with values:
-          | name | name |
-          | pass | pass |
+          | name | foo |
+          | pass | bar |
           Then the response should contain "POST"
           And the response should contain json:
           '''
           {
-          "name" : "name",
-          "pass": "pass"
+          "name" : "foo",
+          "pass": "bar"
           }
           '''
       """
@@ -213,7 +212,7 @@ Feature: Test app verification
         I need to be able to use authentication in a scenario
 
       Scenario:
-        Given I am authenticating as "user" with "pass" password
+        Given I am basic authenticating as "user" with "pass" password
         When I send a GET request to "echo"
         Then the response should contain "headers"
         And the response should contain "authorization"
