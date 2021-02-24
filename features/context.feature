@@ -24,7 +24,7 @@ Feature: client aware context
            * @Then /^the client should be set$/
            */
           public function theClientShouldBeSet() {
-              PHPUnit_Framework_Assert::assertInstanceOf('GuzzleHttp\Client', $this->client);
+              \PHPUnit\Framework\Assert::assertInstanceOf('GuzzleHttp\Client', $this->client);
           }
       }
       """

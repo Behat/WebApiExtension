@@ -119,7 +119,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function theOutputShouldContain(PyStringNode $text)
     {
-        PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        \PHPUnit\Framework\Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
     }
 
     private function getExpectedOutput(PyStringNode $expectedText)
@@ -162,13 +162,13 @@ class FeatureContext implements SnippetAcceptingContext
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertNotEquals(0, $this->getExitCode());
+            \PHPUnit\Framework\Assert::assertNotEquals(0, $this->getExitCode());
         } else {
             if (0 !== $this->getExitCode()) {
                 echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
             }
 
-            PHPUnit_Framework_Assert::assertEquals(0, $this->getExitCode());
+            \PHPUnit\Framework\Assert::assertEquals(0, $this->getExitCode());
         }
     }
 
