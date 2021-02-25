@@ -218,8 +218,9 @@ Feature: Test app verification
 
       --- Failed steps:
 
-          And the response should contain json: # features/send_values.feature:11
-            Failed asserting that '123' matches PCRE pattern "/[a-z]+/".
+    001 Scenario:                               # features/send_values.feature:6
+            And the response should contain json: # features/send_values.feature:11
+              Failed asserting that '123' matches PCRE pattern "/[a-z]+/".
 
       1 scenario (1 failed)
       3 steps (2 passed, 1 failed)
