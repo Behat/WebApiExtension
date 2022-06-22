@@ -7,7 +7,7 @@ Installation
 This extension requires:
 
 * Behat 3.0+
-* PHP 5.4+
+* PHP 7+
 
 Through Composer
 ~~~~~~~~~~~~~~~~

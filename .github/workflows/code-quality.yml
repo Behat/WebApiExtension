@@ -1,0 +1,38 @@
+name: Code Quality Tests
+on:
+  pull_request: ~
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          #          - php: 7.3
+          #          - php: 7.4
+          - php: 7.4
+          #            SYMFONY_REQUIRE: 4.4.*
+          - php: 8.0
+    #          - php: 8.0
+    #            stability: dev
+    #            SYMFONY_REQUIRE: 6.0.*
+    #          - php: 8.1
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          ini-values: "phar.readonly=0,zend.exception_ignore_args=Off"
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run tests (Behat)
+        run: |
+          nohup php -S 0.0.0.0:8080 -t testapp > phpd.log 2>&1 &
+          vendor/bin/behat -f progress

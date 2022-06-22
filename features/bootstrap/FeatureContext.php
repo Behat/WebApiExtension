@@ -54,7 +54,7 @@ class FeatureContext implements SnippetAcceptingContext
         }
         $this->workingDir = $dir;
         $this->phpBin = $php;
-        $this->process = new Process(null);
+        $this->process = new Process([]);
     }
 
     /**
@@ -81,17 +81,17 @@ class FeatureContext implements SnippetAcceptingContext
     public function iRunBehat($argumentsString = '')
     {
         $argumentsString = strtr($argumentsString, array('\'' => '"'));
-
-        $this->process->setWorkingDirectory($this->workingDir);
-        $this->process->setCommandLine(
-            sprintf(
-                '%s %s %s %s',
-                $this->phpBin,
-                escapeshellarg(BEHAT_BIN_PATH),
-                $argumentsString,
-                strtr('--format-settings=\'{"timer": false}\' --no-colors', array('\'' => '"', '"' => '\"'))
-            )
+        $cmd = sprintf(
+            '%s %s %s %s',
+            $this->phpBin,
+            escapeshellarg(BEHAT_BIN_PATH),
+            $argumentsString,
+            strtr('--format-settings=\'{"timer": false}\' --no-colors', array('\'' => '"', '"' => '\"'))
         );
+
+        $this->process = Process::fromShellCommandline($cmd);
+        $this->process->setWorkingDirectory($this->workingDir);
+
         $this->process->start();
         $this->process->wait();
     }
@@ -119,7 +119,12 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function theOutputShouldContain(PyStringNode $text)
     {
-        \PHPUnit\Framework\Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        // support to phpunit 9
+        if (method_exists(\PHPUnit\Framework\Assert::class, 'assertStringContainsString')) {
+            \PHPUnit\Framework\Assert::assertStringContainsString($this->getExpectedOutput($text), $this->getOutput());
+        } else {
+            \PHPUnit\Framework\Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+        }
     }
 
     private function getExpectedOutput(PyStringNode $expectedText)

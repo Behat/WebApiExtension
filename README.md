@@ -15,6 +15,13 @@ Provides testing for JSON APIs with Behat 3
 
 Copyright (c) 2014 Konstantin Kudryashov (ever.zet). See LICENSE for details.
 
+## Run Behat local
+```
+composer install
+php -S 0.0.0.0:8080 -t testapp &
+vendor/bin/behat -f progress
+```
+
 ## Contributors
 
 * Christophe Coevoet [stof](http://github.com/stof) [lead developer]
