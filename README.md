@@ -1,5 +1,13 @@
 # WebApiExtension
 
+This package is abandoned
+-------------------------
+
+This package (which never had a stable release) is abandoned and will not receive further updates.
+
+---
+
+
 [![Build Status](https://travis-ci.org/Behat/WebApiExtension.svg?branch=master)](https://travis-ci.org/Behat/WebApiExtension)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Behat/WebApiExtension/badges/quality-score.png?s=6499e6132229ddab00c3777daf1c74a9f31bee7c)](https://scrutinizer-ci.com/g/Behat/WebApiExtension/)
 
